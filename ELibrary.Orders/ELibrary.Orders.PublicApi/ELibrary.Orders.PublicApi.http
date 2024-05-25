@@ -1,0 +1,6 @@
+@ELibrary.Orders.PublicApi_HostAddress = http://localhost:5121
+
+GET {{ELibrary.Orders.PublicApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

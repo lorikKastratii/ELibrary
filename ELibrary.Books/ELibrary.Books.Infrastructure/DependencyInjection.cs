@@ -1,4 +1,6 @@
-﻿using ELibrary.Books.Infrastructure.Data;
+﻿using Elibrary.Books.Domain.Interfaces;
+using ELibrary.Books.Infrastructure.Data;
+using ELibrary.Books.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,6 +10,8 @@ namespace ELibrary.Books.Infrastructure
     {
         public static IServiceCollection AddInfrastructureModule(this IServiceCollection services)
         {
+            services.AddScoped<IBookRepository, BookRepository>();
+
             //TODO: move this to appsettings
             var connectionString = "Server=LORIK\\SQLEXPRESS;Database=ELibraryBooks;Trusted_Connection=True;TrustServerCertificate=True;";
 

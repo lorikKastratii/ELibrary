@@ -17,6 +17,8 @@ namespace ELibrary.Books.PublicAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             builder.Services
                 .AddDomainModule()
                 .AddApplicationModule()

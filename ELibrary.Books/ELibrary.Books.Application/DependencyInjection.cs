@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using ELibrary.Books.Application.Interfaces;
+using ELibrary.Books.Application.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ELibrary.Books.Application
 {
@@ -6,6 +8,8 @@ namespace ELibrary.Books.Application
     {
         public static IServiceCollection AddApplicationModule(this IServiceCollection services)
         {
+            services.AddScoped<IBookService, BookService>();
+
             return services;
         }
     }

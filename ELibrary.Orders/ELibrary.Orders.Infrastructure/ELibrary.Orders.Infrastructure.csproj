@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ELibrary.Orders.Application\ELibrary.Orders.Application.csproj" />
     <ProjectReference Include="..\ELibrary.Orders.Domain\ELibrary.Orders.Domain.csproj" />
   </ItemGroup>
 

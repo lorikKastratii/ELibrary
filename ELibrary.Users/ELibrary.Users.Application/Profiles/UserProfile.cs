@@ -11,6 +11,7 @@ namespace ELibrary.Users.Application.Profiles
         {
             CreateMap<UserRegisterRequest, UserRegisterDto>();
             CreateMap<UserRegisterDto, User>();
+            CreateMap<User, UserDto>();
         }
     }
 }

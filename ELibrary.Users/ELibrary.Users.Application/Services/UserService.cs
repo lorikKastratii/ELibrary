@@ -60,19 +60,21 @@ namespace ELibrary.Users.Application.Services
             return new ServiceResponse<string>(Errors.USER_NOT_FOUND);
         }
 
-        public async Task<ServiceResponse<User>> GetUser(string username)
+        public async Task<ServiceResponse<UserDto>> GetUser(int id)
         {
-            if (username is null)
+            if (id < 0)
             {
-                return new ServiceResponse<User>(Errors.USER_NOT_FOUND);
+                return new ServiceResponse<UserDto>(Errors.USER_NOT_FOUND);
             }
 
-            var user = await _userManager.FindByNameAsync(username);
+            var user = await _userManager.FindByIdAsync(id.ToString());
 
             if (user is null)
-                return new ServiceResponse<User>(Errors.USER_NOT_FOUND);
+                return new ServiceResponse<UserDto>(Errors.USER_NOT_FOUND);
 
-            return new ServiceResponse<User> { Data = user };
+            var userDto = _mapper.Map<UserDto>(user);
+
+            return new ServiceResponse<UserDto> { Data = userDto };
         }
     }
 }

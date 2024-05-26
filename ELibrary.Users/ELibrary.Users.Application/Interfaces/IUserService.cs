@@ -9,6 +9,6 @@ namespace ELibrary.Users.Application.Interfaces
     {
         Task<ServiceResponse<string>> RegisterUser(UserRegisterDto user);
         Task<ServiceResponse<string>> AuthenticateUser(string email, string password);
-        Task<ServiceResponse<User>> GetUser(string username);
+        Task<ServiceResponse<UserDto>> GetUser(int id);
     }
 }

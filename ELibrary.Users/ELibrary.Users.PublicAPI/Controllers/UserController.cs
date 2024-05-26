@@ -51,10 +51,10 @@ namespace ELibrary.Users.PublicAPI.Controllers
         }
         
         [HttpGet]
-        [Route("GetUserByUsername/{username}")]
-        public async Task<IActionResult> GetUserByUsername(string username)
+        [Route("GetUserById/{id}")]
+        public async Task<IActionResult> GetUserById(int id)
         {
-            var response = await _userService.GetUser(username);
+            var response = await _userService.GetUser(id);
 
             if (response.IsSuccess is false)
             {

@@ -15,14 +15,14 @@ namespace ELibrary.Orders.PublicApi.Controllers
             _userService = userService;
         }
 
-        [HttpGet("GetUser{username}")]
-        public async Task<IActionResult> GetUserAsync(string username)
+        [HttpGet("GetUser{id}")]
+        public async Task<IActionResult> GetUserAsync(int id)
         {
-            var user = await _userService.GetUserByEmail(username);
+            var user = await _userService.GetUserById(id);
 
             if (user is null)
             {
-                return NotFound();
+                return NotFound("User with this Id does not exists.");
             }
 
             return Ok(user);

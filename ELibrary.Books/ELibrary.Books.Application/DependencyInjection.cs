@@ -9,6 +9,7 @@ namespace ELibrary.Books.Application
         public static IServiceCollection AddApplicationModule(this IServiceCollection services)
         {
             services.AddScoped<IBookService, BookService>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             return services;
         }

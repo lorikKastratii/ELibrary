@@ -21,16 +21,16 @@ namespace ELibrary.Books.PublicAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetBooks()
+        public async Task<IActionResult> GetBooks()
         {
-            var books = _bookService.GetBooks();
+            var response = await _bookService.GetBooksAsync();
 
-            if (books.Any())
+            if (response.IsSuccess)
             {
-                return Ok(books);
+                return Ok(response.Data);
             }
 
-            return NotFound();
+            return NotFound(response.Error?.Message);
         }
 
         [HttpPost("CreateBook")]
@@ -45,12 +45,12 @@ namespace ELibrary.Books.PublicAPI.Controllers
 
             var response = await _bookService.CreateBookAsync(bookDto);
 
-            if (response)
+            if (response.IsSuccess)
             {
-                return Ok("Book Created!");
+                return Ok(response.Data);
             }
 
-            return BadRequest("Error creating book!");
+            return BadRequest(response.Error?.Message);
         }
     }
 }

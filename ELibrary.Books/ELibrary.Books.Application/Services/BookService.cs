@@ -2,7 +2,10 @@
 using Elibrary.Books.Domain.Entity;
 using Elibrary.Books.Domain.Interfaces;
 using ELibrary.Books.Application.Dtos;
+using ELibrary.Books.Application.Extensions;
+using ELibrary.Books.Application.Extensions.Errors;
 using ELibrary.Books.Application.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace ELibrary.Books.Application.Services
 {
@@ -10,34 +13,46 @@ namespace ELibrary.Books.Application.Services
     {
         private readonly IBookRepository _bookRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<BookService> _logger;
 
-        public BookService(IBookRepository bookRepository, IMapper mapper)
+        public BookService(IBookRepository bookRepository, IMapper mapper, ILogger<BookService> logger)
         {
             _bookRepository = bookRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
-        public List<BookDto> GetBooks()
+        public async Task<ServiceResponse<List<BookDto>>> GetBooksAsync()
         {
-            var books = _bookRepository.GetBooks();
+            var books = await _bookRepository.GetBooksAsync();
+
+            if (books is null || books.Any() is false)
+            {
+                return new ServiceResponse<List<BookDto>>(BookErrors.BOOK_EMPTY);
+            }
 
             var bookDtos = _mapper.Map<List<BookDto>>(books);
 
-            return bookDtos;
+            return new ServiceResponse<List<BookDto>> { Data = bookDtos};
         }
 
-        public async Task<bool> CreateBookAsync(BookDto bookDto)
+        public async Task<ServiceResponse<BookDto>> CreateBookAsync(BookDto bookDto)
         {
+            if (bookDto is null)
+            {
+                return new ServiceResponse<BookDto>(BookErrors.BOOK_EMPTY);
+            }
+
             var book = _mapper.Map<Book>(bookDto);
 
             var result = await _bookRepository.CreateBookAsync(book);
 
-            if (result)
+            if (result is false)
             {
-                return true;
+                return new ServiceResponse<BookDto>(BookErrors.BOOK_CREATION_ERROR);
             }
 
-            return false;
+            return new ServiceResponse<BookDto>(bookDto);
         }
     }
 }

@@ -1,21 +1,25 @@
 ﻿using Elibrary.Books.Domain.Entity;
 using Elibrary.Books.Domain.Interfaces;
 using ELibrary.Books.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace ELibrary.Books.Infrastructure.Repositories
 {
     public class BookRepository : IBookRepository
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<BookRepository> _logger;
 
-        public BookRepository(AppDbContext context)
+        public BookRepository(AppDbContext context, ILogger<BookRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
-        public List<Book> GetBooks()
+        public async Task<List<Book>> GetBooksAsync()
         {
-            var books = _context.Books.ToList();
+            var books = await _context.Books.ToListAsync();
 
             return books;
         }
@@ -23,9 +27,18 @@ namespace ELibrary.Books.Infrastructure.Repositories
         public async Task<bool> CreateBookAsync(Book book)
         {
             await _context.Books.AddAsync(book);
-            var result = await _context.SaveChangesAsync();
+            
+            try
+            {
+                var result = await _context.SaveChangesAsync();
 
-            return result == 1;
+                return result > 0;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Creating of Book failed.");
+                return false;
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ namespace ELibrary.Books.Application
         {
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IAuthorService, AuthorService>();
 
             return services;
         }

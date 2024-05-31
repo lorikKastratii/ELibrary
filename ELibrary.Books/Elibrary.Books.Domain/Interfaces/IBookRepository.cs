@@ -4,7 +4,7 @@ namespace Elibrary.Books.Domain.Interfaces
 {
     public interface IBookRepository
     {
-        List<Book> GetBooks();
+        Task<List<Book>> GetBooksAsync();
         Task<bool> CreateBookAsync(Book book);
     }
 }

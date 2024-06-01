@@ -2,7 +2,6 @@
 using ELibrary.Books.Application.Dtos;
 using ELibrary.Books.Application.Interfaces;
 using ELibrary.Books.Application.Requests;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ELibrary.Books.PublicAPI.Controllers

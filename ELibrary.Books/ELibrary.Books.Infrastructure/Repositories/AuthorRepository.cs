@@ -1,6 +1,7 @@
 ﻿using Elibrary.Books.Domain.Entity;
 using Elibrary.Books.Domain.Interfaces;
 using ELibrary.Books.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Numerics;
 
@@ -40,7 +41,7 @@ namespace ELibrary.Books.Infrastructure.Repositories
             }
         }
 
-        public async Task<Author> GetAuthorById(int id)
+        public async Task<Author> GetAuthorByIdAsync(int id)
         {
             var author = await _context.Authors.FindAsync(id);
 
@@ -52,9 +53,11 @@ namespace ELibrary.Books.Infrastructure.Repositories
             return author;
         }
 
-        public Task<List<Author>> GetAuthors()
+        public async Task<List<Author>> GetAuthorsAsync()
         {
-            throw new NotImplementedException();
+            var authors = await _context.Authors.ToListAsync();
+
+            return authors;
         }
     }
 }

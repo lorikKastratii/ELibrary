@@ -1,5 +1,7 @@
-﻿using ELibrary.Books.Application.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using ELibrary.Books.Application.Dtos.Author;
+using ELibrary.Books.Application.Interfaces;
+using ELibrary.Books.Application.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ELibrary.Books.PublicAPI.Controllers
@@ -9,24 +11,45 @@ namespace ELibrary.Books.PublicAPI.Controllers
     public class AuthorController : ControllerBase
     {
         private readonly IAuthorService _authorService;
+        private readonly IMapper _mapper;
 
-        public AuthorController(IAuthorService authorService)
+        public AuthorController(IAuthorService authorService, IMapper mapper)
         {
             _authorService = authorService;
+            _mapper = mapper;
         }
 
         [HttpGet("GetAuthorById")]
         public async Task<IActionResult> GetAuthorById(int id)
         {
-            var author = await _authorService.GetAuthorById(id);
+            var response = await _authorService.GetAuthorByIdAsync(id);
 
-            if (author is null)
+            if (response.IsSuccess is false)
             {
                 return NotFound();
             }
 
-            return Ok(author);
+            return Ok(response.Data);
         }
 
+        [HttpPost("AddAuthor")]
+        public async Task<IActionResult> AddAuthor(CreateAuthorRequest request)
+        {
+            if (request is null)
+            {
+                return BadRequest();
+            }
+
+            var author = _mapper.Map<AuthorDto>(request);
+
+            var response = await _authorService.AddAuthorAsync(author);
+
+            if (response.IsSuccess is false)
+            {
+                return Ok(response.Error?.Message);
+            }
+
+            return Ok(response.Data);
+        }
     }
 }

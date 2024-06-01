@@ -15,8 +15,8 @@ namespace ELibrary.Books.Infrastructure
             services.AddScoped<IAuthorRepository, AuthorRepository>();
 
             //TODO: move this to appsettings
-            var connectionString = "Server=LORIK\\SQLEXPRESS;Database=ELibraryBooks;Trusted_Connection=True;TrustServerCertificate=True;";
-
+            var connectionString = "Server=DESKTOP-BRGQULH;Database=ELibraryBooks;Trusted_Connection=True;TrustServerCertificate=True";
+            //var connectionString = "Data Source= DESKTOP-BRGQULH; Integrated Security=true;Initial Catalog= eTravelCompany;"
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
             return services;

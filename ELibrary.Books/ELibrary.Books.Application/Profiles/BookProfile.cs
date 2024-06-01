@@ -12,6 +12,7 @@ namespace ELibrary.Books.Application.Profiles
             CreateMap<Book, BookDto>()
                 .ReverseMap();
             CreateMap<CreateBookRequest, BookDto>();
+            CreateMap<UpdateBookRequest, BookDto>();
         }
     }
 }

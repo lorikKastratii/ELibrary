@@ -7,5 +7,7 @@ namespace ELibrary.Books.Application.Interfaces
     {
         Task<ServiceResponse<List<BookDto>>> GetBooksAsync();
         Task<ServiceResponse<BookDto>> CreateBookAsync(BookDto bookDto);
+        Task<bool> UpdateBookAsync(BookDto bookDto);
+        Task<BookDto> GetBookByIdAsync(int id);
     }
 }

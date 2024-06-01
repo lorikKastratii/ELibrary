@@ -41,6 +41,7 @@ namespace ELibrary.Books.PublicAPI
 
             app.UseAuthorization();
 
+            //app.UseSerilogRequestLogging();
 
             app.MapControllers();
 

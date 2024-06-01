@@ -6,5 +6,7 @@ namespace Elibrary.Books.Domain.Interfaces
     {
         Task<List<Book>> GetBooksAsync();
         Task<bool> CreateBookAsync(Book book);
+        Task<bool> UpdateBookAsync(Book book);
+        Task<Book> GetBookByIdAsync(int id);
     }
 }

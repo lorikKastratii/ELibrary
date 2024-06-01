@@ -49,7 +49,7 @@ namespace ELibrary.Books.Application.Services
 
             if (author.Data is null)
             {
-                //_logger.LogError($"Cannot create book because Author with Id: {id} does not exists", bookDto.AuthorId);
+                _logger.LogError("Cannot create book because Author with Id: {@id} does not exists", bookDto.AuthorId);
                 return new ServiceResponse<BookDto>(AuthorErrors.AUTHOR_NOT_FOUND);
             }
 
@@ -63,6 +63,47 @@ namespace ELibrary.Books.Application.Services
             }
 
             return new ServiceResponse<BookDto>(bookDto);
+        }
+
+        public async Task<bool> UpdateBookAsync(BookDto bookDto)
+        {
+            if (bookDto is null)
+            {
+                _logger.LogWarning("Book cannot be null");
+                return false;
+            }
+
+            var book = _mapper.Map<Book>(bookDto);
+
+            var response = await _bookRepository.UpdateBookAsync(book);
+
+            if (response is false)
+            {
+                _logger.LogWarning("Failed to update book with Id: {id}", bookDto.Id);
+            }
+
+            return response;
+        }
+
+        public async Task<BookDto> GetBookByIdAsync(int id)
+        {
+            if (id <= 0)
+            {
+                _logger.LogError("Invalid Id: {id}. Id cannot be 0", id);
+                return null;
+            }
+
+            var book = await _bookRepository.GetBookByIdAsync(id);
+
+            if (book is null)
+            {
+                _logger.LogWarning("Book with Id: {id} not found", id);
+                return null;
+            }
+
+            var bookDto = _mapper.Map<BookDto>(book);
+
+            return bookDto;
         }
     }
 }

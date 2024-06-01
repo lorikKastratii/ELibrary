@@ -9,7 +9,8 @@ namespace ELibrary.Books.Application.Profiles
     {
         public AuthorProfile()
         {
-            CreateMap<AuthorDto, Author>();
+            CreateMap<AuthorDto, Author>()
+                .ReverseMap();
             CreateMap<CreateAuthorRequest, AuthorDto>();
         }
     }

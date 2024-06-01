@@ -32,8 +32,8 @@ namespace ELibrary.Books.PublicAPI.Controllers
             return Ok(response.Data);
         }
 
-        [HttpPost("AddAuthor")]
-        public async Task<IActionResult> AddAuthor(CreateAuthorRequest request)
+        [HttpPost("CreateAuthor")]
+        public async Task<IActionResult> CreateAuthor(CreateAuthorRequest request)
         {
             if (request is null)
             {
@@ -42,9 +42,22 @@ namespace ELibrary.Books.PublicAPI.Controllers
 
             var author = _mapper.Map<AuthorDto>(request);
 
-            var response = await _authorService.AddAuthorAsync(author);
+            var response = await _authorService.CreateAuthorAsync(author);
 
             if (response.IsSuccess is false)
+            {
+                return Ok(response.Error?.Message);
+            }
+
+            return Ok(response.Data);
+        }
+
+        [HttpGet("GetAuthors")]
+        public async Task<IActionResult> GetAuthorsAsync()
+        {
+            var response = await _authorService.GetAuthorsAsync();
+
+            if(response.IsSuccess is false)
             {
                 return Ok(response.Error?.Message);
             }

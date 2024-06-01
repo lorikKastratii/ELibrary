@@ -25,16 +25,17 @@ namespace ELibrary.Books.Application.Services
             _logger = logger;
         }
 
-        public async Task<ServiceResponse<Author>> AddAuthorAsync(AuthorDto authorDto)
+        public async Task<ServiceResponse<Author>> CreateAuthorAsync(AuthorDto authorDto)
         {
             if (authorDto is null)
             {
+                _logger.LogError("Author cannot be null.");
                 return new ServiceResponse<Author>(AuthorErrors.AUTHOR_EMPTY);
             }
 
             var author = _mapper.Map<Author>(authorDto);
 
-            var response = await _authorRepository.AddAsync(author);
+            var response = await _authorRepository.CreateAsync(author);
 
             if (response is null)
             {
@@ -56,22 +57,25 @@ namespace ELibrary.Books.Application.Services
 
             if (author is null)
             {
+                _logger.LogError($"Author with {id} does not exists.");
                 return new ServiceResponse<Author>(AuthorErrors.AUTHOR_NOT_FOUND);
             }
 
             return new ServiceResponse<Author>(author);
         }
 
-        public async Task<ServiceResponse<List<Author>>> GetAuthorsAsync()
+        public async Task<ServiceResponse<List<AuthorDto>>> GetAuthorsAsync()
         {
             var authors = await _authorRepository.GetAuthorsAsync();
 
-            if (authors is null || authors.Count > 0)
+            if (authors is null || authors.Count < 0)
             {
-                return new ServiceResponse<List<Author>>(AuthorErrors.AUTHOR_NOT_FOUND);
+                return new ServiceResponse<List<AuthorDto>>(AuthorErrors.AUTHOR_NOT_FOUND);
             }
 
-            return new ServiceResponse<List<Author>>(authors);
+            var authorDtos = _mapper.Map<List<AuthorDto>>(authors);
+
+            return new ServiceResponse<List<AuthorDto>>(authorDtos);
         }
     }
 }

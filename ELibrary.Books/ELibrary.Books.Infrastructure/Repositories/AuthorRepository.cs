@@ -18,7 +18,7 @@ namespace ELibrary.Books.Infrastructure.Repositories
             _logger = logger;
         }
 
-        public async Task<Author> AddAsync(Author author)
+        public async Task<Author> CreateAsync(Author author)
         {
             try
             {
@@ -44,11 +44,6 @@ namespace ELibrary.Books.Infrastructure.Repositories
         public async Task<Author> GetAuthorByIdAsync(int id)
         {
             var author = await _context.Authors.FindAsync(id);
-
-            if (author is null)
-            {
-                _logger.LogWarning($"Author with Id: {id} was not found");
-            }
 
             return author;
         }

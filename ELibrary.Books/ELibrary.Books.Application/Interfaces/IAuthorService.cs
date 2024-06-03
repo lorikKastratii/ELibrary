@@ -6,8 +6,8 @@ namespace ELibrary.Books.Application.Interfaces
 {
     public interface IAuthorService
     {
-        Task<ServiceResponse<Author>> GetAuthorByIdAsync(int id);
+        Task<ServiceResponse<AuthorDto>> GetAuthorByIdAsync(int id);
         Task<ServiceResponse<List<AuthorDto>>> GetAuthorsAsync();
-        Task<ServiceResponse<Author>> CreateAuthorAsync(AuthorDto author);
+        Task<ServiceResponse<AuthorDto>> CreateAuthorAsync(AuthorDto author);
     }
 }

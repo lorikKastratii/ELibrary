@@ -25,12 +25,12 @@ namespace ELibrary.Books.Application.Services
             _logger = logger;
         }
 
-        public async Task<ServiceResponse<Author>> CreateAuthorAsync(AuthorDto authorDto)
+        public async Task<ServiceResponse<AuthorDto>> CreateAuthorAsync(AuthorDto authorDto)
         {
             if (authorDto is null)
             {
                 _logger.LogError("Author cannot be null.");
-                return new ServiceResponse<Author>(AuthorErrors.AUTHOR_EMPTY);
+                return new ServiceResponse<AuthorDto>(AuthorErrors.AUTHOR_EMPTY);
             }
 
             var author = _mapper.Map<Author>(authorDto);
@@ -39,18 +39,18 @@ namespace ELibrary.Books.Application.Services
 
             if (response is null)
             {
-                return new ServiceResponse<Author>(AuthorErrors.AUTHOR_CREATION_ERROR);
+                return new ServiceResponse<AuthorDto>(AuthorErrors.AUTHOR_CREATION_ERROR);
             }
 
             //TODO: change this to dto
-            return new ServiceResponse<Author>(author);
+            return new ServiceResponse<AuthorDto>(_mapper.Map<AuthorDto>(author));
         }
 
-        public async Task<ServiceResponse<Author>> GetAuthorByIdAsync(int id)
+        public async Task<ServiceResponse<AuthorDto>> GetAuthorByIdAsync(int id)
         {
             if (id < 0)
             {
-                return new ServiceResponse<Author>(AuthorErrors.AUTHOR_EMPTY);
+                return new ServiceResponse<AuthorDto>(AuthorErrors.AUTHOR_EMPTY);
             }
 
             var author = await _authorRepository.GetAuthorByIdAsync(id);
@@ -58,10 +58,10 @@ namespace ELibrary.Books.Application.Services
             if (author is null)
             {
                 _logger.LogError($"Author with {id} does not exists.");
-                return new ServiceResponse<Author>(AuthorErrors.AUTHOR_NOT_FOUND);
+                return new ServiceResponse<AuthorDto>(AuthorErrors.AUTHOR_NOT_FOUND);
             }
 
-            return new ServiceResponse<Author>(author);
+            return new ServiceResponse<AuthorDto>(_mapper.Map<AuthorDto>(author));
         }
 
         public async Task<ServiceResponse<List<AuthorDto>>> GetAuthorsAsync()

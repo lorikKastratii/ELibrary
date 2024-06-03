@@ -48,10 +48,12 @@ namespace ELibrary.Books.PublicAPI.Controllers
 
             if (response.IsSuccess)
             {
-                return Ok(response.Data);
+                _logger.LogWarning("Failed to create book with title: {title}", request.Title);
+
+                return Ok(response.Error?.Message);
             }
 
-            return BadRequest(response.Error?.Message);
+            return Ok(response.Data);
         }
 
         [HttpPost("UpdateBook")]
@@ -87,7 +89,20 @@ namespace ELibrary.Books.PublicAPI.Controllers
                 return Ok(book);
             }
 
-            return NotFound();
+            return NotFound("Book does not exists");
+        }
+
+        [HttpGet("GetBooksByCategory{id}")]
+        public async Task<IActionResult> GetBooksByCategory(int id)
+        {
+            var books = await _bookService.GetBooksByCategoryAsync(id);
+
+            if (books is not null && books.Count() > 1)
+            {
+                return Ok(books);
+            }
+
+            return NotFound("No book exists in this category");
         }
     }
 }

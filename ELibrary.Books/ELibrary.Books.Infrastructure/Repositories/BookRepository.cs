@@ -66,5 +66,15 @@ namespace ELibrary.Books.Infrastructure.Repositories
 
             return book;
         }
+
+        public async Task<List<Book>> GetBooksByCategoryAsync(int categoryId)
+        {
+            var books = await _context.Books
+                .Where(x => x.BookCategories.Any(bc => bc.CategoryId == categoryId))
+                .AsNoTracking()
+                .ToListAsync();
+
+            return books;
+        }
     }
 }

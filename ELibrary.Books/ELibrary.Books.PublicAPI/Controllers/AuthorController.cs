@@ -57,7 +57,7 @@ namespace ELibrary.Books.PublicAPI.Controllers
         {
             var response = await _authorService.GetAuthorsAsync();
 
-            if(response.IsSuccess is false)
+            if (response.IsSuccess is false)
             {
                 return Ok(response.Error?.Message);
             }

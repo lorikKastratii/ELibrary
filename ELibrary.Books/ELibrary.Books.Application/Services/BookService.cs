@@ -105,5 +105,26 @@ namespace ELibrary.Books.Application.Services
 
             return bookDto;
         }
+
+        public async Task<List<BookDto>> GetBooksByCategoryAsync(int categoryId)
+        {
+            if (categoryId <= 0)
+            {
+                _logger.LogError("Category Id: {id} cannot be negative.", categoryId);
+
+                return null;
+            }
+
+            var books = await _bookRepository.GetBooksByCategoryAsync(categoryId);
+
+            if (books is null || books.Any() is false)
+            {
+                _logger.LogError("No books exists for CategoryId: {id}.", categoryId);
+            }
+
+            var booksDto = _mapper.Map<List<BookDto>>(books);
+
+            return booksDto;
+        }
     }
 }

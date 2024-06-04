@@ -3,7 +3,6 @@ using Elibrary.Books.Domain.Interfaces;
 using ELibrary.Books.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Numerics;
 
 namespace ELibrary.Books.Infrastructure.Repositories
 {
@@ -43,14 +42,17 @@ namespace ELibrary.Books.Infrastructure.Repositories
 
         public async Task<Author> GetAuthorByIdAsync(int id)
         {
-            var author = await _context.Authors.FirstOrDefaultAsync(x => x.Id == id && x.IsActive);
+            var author = await _context.Authors.
+                FirstOrDefaultAsync(x => x.Id == id && x.IsActive);
 
             return author;
         }
 
         public async Task<List<Author>> GetAuthorsAsync()
         {
-            var authors = await _context.Authors.ToListAsync();
+            var authors = await _context.Authors.
+                AsNoTracking().
+                ToListAsync();
 
             return authors;
         }

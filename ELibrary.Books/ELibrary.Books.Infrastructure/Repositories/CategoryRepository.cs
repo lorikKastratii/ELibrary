@@ -1,25 +1,36 @@
 ﻿using Elibrary.Books.Domain.Entity;
 using Elibrary.Books.Domain.Interfaces;
 using ELibrary.Books.Infrastructure.Data;
+using Microsoft.Extensions.Logging;
 
 namespace ELibrary.Books.Infrastructure.Repositories
 {
     public class CategoryRepository : ICategoryRepository
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<CategoryRepository> _logger;
 
-        public CategoryRepository(AppDbContext context)
+        public CategoryRepository(AppDbContext context, ILogger<CategoryRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
-        public async Task<bool> AddAsync(Category category)
+        public async Task<Category> CreateAsync(Category category)
         {
-            _context.Categories.Add(category);
+            await _context.Categories.AddAsync(category);
 
-            var result = await _context.SaveChangesAsync();
+            try
+            {
+                var result = await _context.SaveChangesAsync();
 
-            return result > 0;
+                return category;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Creating of Category failed.");
+                return category;
+            }
         }
 
         public Task DeleteAsync(int id)

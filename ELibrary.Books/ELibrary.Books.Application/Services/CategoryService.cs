@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Elibrary.Books.Domain.Entity;
 using Elibrary.Books.Domain.Interfaces;
+using ELibrary.Books.Application.Dtos.Category;
 using ELibrary.Books.Application.Extensions;
+using ELibrary.Books.Application.Extensions.Errors;
 using ELibrary.Books.Application.Interfaces;
 using ELibrary.Books.Application.Models;
 using Microsoft.Extensions.Logging;
@@ -21,32 +23,34 @@ namespace ELibrary.Books.Application.Services
             _mapper = mapper;
         }
 
-        public Task<ServiceResponse<bool>> AddCategoryAsync(CreateCategory categoryModel)
+        public async Task<ServiceResponse<CategoryDto>> CreateCategoryAsync(CreateCategory createCategory)
         {
-            throw new NotImplementedException();
+            if (createCategory is null)
+            {
+                return new ServiceResponse<CategoryDto>(CategoryErrors.CATEGORY_EMPTY);
+            }
+
+            var categoryEntity = _mapper.Map<Category>(createCategory);
+
+            try
+            {
+                var category = await _categoryRepository.CreateAsync(categoryEntity);
+
+                if (category is null)
+                {
+                    _logger.LogError("Error creating category with name: {name}", createCategory.Name);
+
+                    return new ServiceResponse<CategoryDto>(CategoryErrors.CATEGORY_CREATION_ERROR);
+                }
+
+                return new ServiceResponse<CategoryDto>(_mapper.Map<CategoryDto>(category));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error happened while creating category with name: {name}", createCategory.Name);
+
+                return new ServiceResponse<CategoryDto>(CategoryErrors.CATEGORY_CREATION_ERROR);
+            }
         }
-
-        //public async Task<ServiceResponse<bool>> AddCategoryAsync(CreateCategory categoryModel)
-        //{
-        //    if (categoryModel is null)
-        //    {
-        //        return false;
-        //    }
-
-        //    var category = _mapper.Map<Category>(categoryModel);
-
-        //    try
-        //    {
-        //        var response = await _categoryRepository.AddAsync(category);
-
-        //        return response;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "An error happened while creating category with name: {name}", category.Name);
-
-        //        return false;
-        //    }
-        //}
     }
 }

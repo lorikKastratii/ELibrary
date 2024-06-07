@@ -1,4 +1,4 @@
-﻿namespace ELibrary.Books.Application.Requests
+﻿namespace ELibrary.Books.Application.Requests.Category
 {
     public class CreateCategoryRequest
     {

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using ELibrary.Books.Application.Dtos.Author;
 using ELibrary.Books.Application.Interfaces;
-using ELibrary.Books.Application.Requests;
+using ELibrary.Books.Application.Requests.Author;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ELibrary.Books.PublicAPI.Controllers
@@ -53,7 +53,7 @@ namespace ELibrary.Books.PublicAPI.Controllers
         }
 
         [HttpGet("GetAuthors")]
-        public async Task<IActionResult> GetAuthorsAsync()
+        public async Task<IActionResult> GetAuthors()
         {
             var response = await _authorService.GetAuthorsAsync();
 
@@ -63,6 +63,13 @@ namespace ELibrary.Books.PublicAPI.Controllers
             }
 
             return Ok(response.Data);
+        }
+
+        [HttpPost("UpdateAuthor")]
+        public IActionResult UpdateAuthor(UpdateAuthorRequest request)
+        {
+            //TODO: implement this in service
+            return Ok();
         }
     }
 }

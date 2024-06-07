@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using ELibrary.Books.Application.Dtos;
+using ELibrary.Books.Application.Dtos.Book;
 using ELibrary.Books.Application.Interfaces;
-using ELibrary.Books.Application.Requests;
+using ELibrary.Books.Application.Requests.Book;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ELibrary.Books.PublicAPI.Controllers

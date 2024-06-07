@@ -1,6 +1,4 @@
-﻿using Elibrary.Books.Domain.Entity;
-
-namespace ELibrary.Books.Application.Requests
+﻿namespace ELibrary.Books.Application.Requests.Book
 {
     public class CreateBookRequest
     {

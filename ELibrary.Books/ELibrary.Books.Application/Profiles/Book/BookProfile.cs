@@ -1,15 +1,16 @@
 ﻿using AutoMapper;
-using Elibrary.Books.Domain.Entity;
-using ELibrary.Books.Application.Dtos;
-using ELibrary.Books.Application.Requests;
+using ELibrary.Books.Application.Dtos.Book;
+using ELibrary.Books.Application.Requests.Book;
 
-namespace ELibrary.Books.Application.Profiles
+using BookEntity = Elibrary.Books.Domain.Entity.Book;
+
+namespace ELibrary.Books.Application.Profiles.Book
 {
     public class BookProfile : Profile
     {
         public BookProfile()
         {
-            CreateMap<Book, BookDto>()
+            CreateMap<BookEntity, BookDto>()
                 .ReverseMap();
             CreateMap<CreateBookRequest, BookDto>();
             CreateMap<UpdateBookRequest, BookDto>();

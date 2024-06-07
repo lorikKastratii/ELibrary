@@ -1,8 +1,6 @@
-﻿using Elibrary.Books.Domain.Entity;
-
-namespace ELibrary.Books.Application.Dtos
+﻿namespace ELibrary.Books.Application.Requests.Book
 {
-    public class BookDto
+    public class UpdateBookRequest
     {
         public int Id { get; set; }
         public string Title { get; set; }

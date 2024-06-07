@@ -1,18 +1,19 @@
 ﻿using AutoMapper;
-using Elibrary.Books.Domain.Entity;
 using ELibrary.Books.Application.Dtos.Category;
 using ELibrary.Books.Application.Models;
-using ELibrary.Books.Application.Requests;
+using ELibrary.Books.Application.Requests.Category;
 
-namespace ELibrary.Books.Application.Profiles
+using CategoryEntity = Elibrary.Books.Domain.Entity.Category;
+
+namespace ELibrary.Books.Application.Profiles.Category
 {
     public class CategoryProfile : Profile
     {
         public CategoryProfile()
         {
             CreateMap<CreateCategoryRequest, CreateCategory>();
-            CreateMap<CreateCategory, Category>();
-            CreateMap<Category, CategoryDto>();
+            CreateMap<CreateCategory, CategoryEntity>();
+            CreateMap<CategoryEntity, CategoryDto>();
         }
     }
 }

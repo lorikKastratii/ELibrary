@@ -1,5 +1,5 @@
 ﻿using Elibrary.Books.Domain.Entity;
-using ELibrary.Books.Application.Dtos;
+using ELibrary.Books.Application.Dtos.Book;
 using ELibrary.Books.Application.Extensions;
 
 namespace ELibrary.Books.Application.Interfaces

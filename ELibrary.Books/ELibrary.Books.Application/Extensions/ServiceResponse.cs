@@ -1,4 +1,4 @@
-﻿namespace ELibrary.Users.Application.Extensions
+﻿namespace ELibrary.Books.Application.Extensions
 {
     public class ServiceResponse<T>
     {
@@ -9,13 +9,17 @@
         public ServiceResponse()
         {
             IsSuccess = Error == null;
-            Error = null;
         }
 
-        public ServiceResponse(string errorMessage)
+        public ServiceResponse(string error)
         {
-            Error = new Error(errorMessage);
+            Error = new Error(error);
             IsSuccess = false;
+        }
+
+        public ServiceResponse(T data)
+        {
+            Data = data;
         }
     }
 }

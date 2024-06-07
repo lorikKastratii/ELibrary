@@ -1,6 +1,7 @@
 using Elibrary.Books.Domain;
 using ELibrary.Books.Application;
 using ELibrary.Books.Infrastructure;
+using Serilog;
 
 namespace ELibrary.Books.PublicAPI
 {
@@ -16,6 +17,11 @@ namespace ELibrary.Books.PublicAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Host.UseSerilog((context, configuration) =>
+                configuration.ReadFrom.Configuration(context.Configuration));
+
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             builder.Services
                 .AddDomainModule()
@@ -35,6 +41,7 @@ namespace ELibrary.Books.PublicAPI
 
             app.UseAuthorization();
 
+            //app.UseSerilogRequestLogging();
 
             app.MapControllers();
 

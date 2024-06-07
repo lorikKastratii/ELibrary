@@ -1,12 +1,10 @@
-﻿namespace Elibrary.Books.Domain.Entity
+﻿namespace ELibrary.Books.Application.Requests.Category
 {
-    public class Category : BaseEntity
+    public class CreateCategoryRequest
     {
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
-
-        public ICollection<BookCategory> BookCategories { get; set; }
     }
 }

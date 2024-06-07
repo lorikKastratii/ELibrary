@@ -1,7 +1,8 @@
-﻿namespace Elibrary.Books.Domain.Entity
+﻿namespace ELibrary.Books.Application.Requests.Book
 {
-    public class Book : BaseEntity
+    public class UpdateBookRequest
     {
+        public int Id { get; set; }
         public string Title { get; set; }
         public int AuthorId { get; set; }
         public string Description { get; set; }
@@ -11,8 +12,5 @@
         public int StockQuantity { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
-
-        public Author Author { get; set; }
-        public ICollection<BookCategory> BookCategories { get; set; }
     }
 }

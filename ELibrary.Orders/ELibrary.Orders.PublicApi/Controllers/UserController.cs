@@ -1,4 +1,4 @@
-﻿using ELibrary.Orders.Infrastructure.Interfaces;
+﻿using ELibrary.Orders.Application.Clients.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,9 +8,9 @@ namespace ELibrary.Orders.PublicApi.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IUserClient _userService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserClient userService)
         {
             _userService = userService;
         }

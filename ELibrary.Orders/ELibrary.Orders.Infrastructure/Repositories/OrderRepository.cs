@@ -13,6 +13,20 @@ namespace ELibrary.Orders.Infrastructure.Repositories
             _context = context;
         }
 
+        public async Task<bool> CreateOrderAsync(Order order)
+        {
+            if(order is null)
+            {
+                return false;
+            }
+
+            await _context.Orders.AddAsync(order);
+
+            var result = await _context.SaveChangesAsync();
+
+            return result > 0;
+        }
+
         public List<Order> GetAllOrders()
         {
             var orders = _context.Orders.ToList();

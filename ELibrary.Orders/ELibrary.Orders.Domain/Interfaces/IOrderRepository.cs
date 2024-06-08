@@ -4,6 +4,7 @@ namespace ELibrary.Orders.Domain.Interfaces
 {
     public interface IOrderRepository
     {
-        List<Order> GetAllOrders(); 
+        List<Order> GetAllOrders();
+        Task<bool> CreateOrderAsync(Order order);
     }
 }

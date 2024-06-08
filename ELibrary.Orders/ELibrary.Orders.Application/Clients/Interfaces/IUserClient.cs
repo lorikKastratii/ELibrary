@@ -1,8 +1,8 @@
 ﻿using ELibrary.Orders.Domain.Entity;
 
-namespace ELibrary.Orders.Infrastructure.Interfaces
+namespace ELibrary.Orders.Application.Clients.Interfaces
 {
-    public interface IUserService
+    public interface IUserClient
     {
         Task<User> GetUserById(int id);
     }

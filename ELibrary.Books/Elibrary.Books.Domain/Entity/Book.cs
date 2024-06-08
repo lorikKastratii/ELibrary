@@ -9,8 +9,6 @@
         public string ISBN { get; set; }
         public DateTime PublishedDate { get; set; }
         public int StockQuantity { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime ModifiedDate { get; set; }
 
         public Author Author { get; set; }
         public ICollection<BookCategory> BookCategories { get; set; }

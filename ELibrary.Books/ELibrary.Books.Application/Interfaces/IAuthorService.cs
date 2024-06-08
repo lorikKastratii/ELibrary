@@ -1,5 +1,6 @@
 ﻿using Elibrary.Books.Domain.Entity;
 using ELibrary.Books.Application.Dtos.Author;
+using ELibrary.Books.Application.Dtos.Book;
 using ELibrary.Books.Application.Extensions;
 
 namespace ELibrary.Books.Application.Interfaces
@@ -9,5 +10,7 @@ namespace ELibrary.Books.Application.Interfaces
         Task<ServiceResponse<AuthorDto>> GetAuthorByIdAsync(int id);
         Task<ServiceResponse<List<AuthorDto>>> GetAuthorsAsync();
         Task<ServiceResponse<AuthorDto>> CreateAuthorAsync(AuthorDto author);
+        Task<ServiceResponse<bool>> UpdateAuthorAsync(AuthorDto authorDto);
+        Task<ServiceResponse<List<BookDto>>> GetBooksByAuthorAsync(int authorId);
     }
 }

@@ -111,6 +111,14 @@ namespace ELibrary.Books.Application.Services
                 return new ServiceResponse<List<BookDto>>(AuthorErrors.AUTHOR_EMPTY);
             }
 
+            var author = await _authorRepository.GetAuthorByIdAsync(authorId);
+
+            if (author is null)
+            {
+                _logger.LogError("Author with Id: {id} does not exists.", authorId);
+                return new ServiceResponse<List<BookDto>>(AuthorErrors.AUTHOR_NOT_FOUND);
+            }
+
             var response = await _bookService.GetBooksByAuthorAsync(authorId);
 
             if (response.IsSuccess)

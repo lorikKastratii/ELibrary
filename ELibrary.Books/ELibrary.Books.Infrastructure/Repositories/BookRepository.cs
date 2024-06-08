@@ -83,12 +83,6 @@ namespace ELibrary.Books.Infrastructure.Repositories
                 .Where(x => x.AuthorId == authorId)
                 .ToListAsync();
 
-            if (books is null || books.Count == 0)
-            {
-                _logger.LogWarning("There are no books for Author with Id: {id}", authorId);
-                return null;
-            }
-
             return books;
         }
     }

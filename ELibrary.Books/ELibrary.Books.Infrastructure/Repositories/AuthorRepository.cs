@@ -42,8 +42,7 @@ namespace ELibrary.Books.Infrastructure.Repositories
 
         public async Task<Author> GetAuthorByIdAsync(int id)
         {
-            var author = await _context.Authors.
-                FirstOrDefaultAsync(x => x.Id == id && x.IsActive);
+            var author = await _context.Authors.FindAsync(id);
 
             return author;
         }

@@ -5,6 +5,7 @@ using ELibrary.Orders.Domain;
 using Serilog;
 using ELibrary.Orders.Application.Clients.Interfaces;
 using ELibrary.Orders.Infrastructure.Clients;
+using ELibrary.Orders.Infrastructure.Services;
 
 namespace ELibrary.Orders.PublicApi
 {
@@ -39,6 +40,8 @@ namespace ELibrary.Orders.PublicApi
                 var uri = builder.Configuration["BookService:BaseUrl"];
                 client.BaseAddress = new Uri(uri);
             });
+
+            builder.Services.AddSingleton<RabbitMQClientService>();
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

@@ -43,19 +43,57 @@ namespace ELibrary.Orders.Application.Services
 
             if (user is null)
             {
-                _logger.LogError("User is null.");
+                _logger.LogError("User with Id: {id} does not exists.", request.UserId);
                 return null;
             }
 
             var orderItems = new List<OrderItem>();
             var outOfStockItems = new List<OrderItemDto>();
 
+            (orderItems, outOfStockItems) = await CalculateItemsAsync(orderItems, outOfStockItems, request);
+
+            if (orderItems.Any() is false)
+            {
+                _logger.LogError("Currently we don't have stock for these items: {@items}", request.OrderItems);
+                return null;
+            }
+
+            var result = await CreateOrderAsync(request, orderItems);
+
+            if (result is not null)
+            {
+                result.OutOfStockItems = outOfStockItems;
+            }
+
+            return result;
+        }
+
+        public List<Order> GetOrders()
+        {
+            return _orderRepository.GetAllOrders();
+        }
+
+        private decimal CalculateTotalAmount(List<OrderItem> orderItems)
+        {
+            decimal totalAmount = 0;
+
+            foreach (var item in orderItems)
+            {
+                totalAmount += item.Quantity * item.UnitPrice;
+            }
+
+            return totalAmount;
+        }
+
+        private async Task<(List<OrderItem>, List<OrderItemDto>)> CalculateItemsAsync(List<OrderItem> orderItems, List<OrderItemDto> outOfStockItems, CreateOrderRequest request)
+        {
             foreach (var item in request.OrderItems)
             {
                 var book = await _bookClient.GetBookAsync(item.BookId);
 
                 if (book is null || book.StockQuantity < item.Quantity)
                 {
+                    _logger.LogWarning("Currently we don't have stock for item with Id: {Id}", item.BookId);
                     outOfStockItems.Add(new OrderItemDto { BookId = item.BookId });
                     continue;
                 }
@@ -67,14 +105,13 @@ namespace ELibrary.Orders.Application.Services
                     UnitPrice = item.UnitPrice,
                     CreatedDate = DateTime.UtcNow
                 });
-            }            
-
-            if (orderItems.Any() is false)
-            {
-                //ADD LOG HERE
-                return null;
             }
 
+            return (orderItems, outOfStockItems);
+        }
+
+        private async Task<OrderResultDto> CreateOrderAsync(CreateOrderRequest request, List<OrderItem> orderItems)
+        {
             var order = new Order
             {
                 UserId = request.UserId,
@@ -116,28 +153,10 @@ namespace ELibrary.Orders.Application.Services
                             UnitPrice = oi.UnitPrice
                         }).ToList(),
                         TotalAmount = order.TotalAmount
-                    },
-                    OutOfStockItems = outOfStockItems
+                    }
                 };
             }
             return null;
-        }
-
-        public List<Order> GetOrders()
-        {
-            return _orderRepository.GetAllOrders();
-        }
-
-        private decimal CalculateTotalAmount(List<OrderItem> orderItems)
-        {
-            decimal totalAmount = 0;
-
-            foreach(var item in orderItems)
-            {
-                totalAmount += item.Quantity * item.UnitPrice;
-            }
-
-            return totalAmount;
         }
     }
 }

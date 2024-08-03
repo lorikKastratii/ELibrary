@@ -2,7 +2,6 @@
 using ELibrary.Users.Application.Dtos;
 using ELibrary.Users.Application.Interfaces;
 using ELibrary.Users.Application.Requests;
-using ELibrary.Users.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ELibrary.Users.PublicAPI.Controllers

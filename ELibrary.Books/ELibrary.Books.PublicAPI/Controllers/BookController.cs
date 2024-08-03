@@ -78,7 +78,7 @@ namespace ELibrary.Books.PublicAPI.Controllers
             return Ok("Book updated successfully!");
         }
 
-        [HttpGet("GetBookById{id}")]
+        [HttpGet("GetBookById/{id}")]
         public async Task<IActionResult> GetBookById(int id)
         {
             var book = await _bookService.GetBookByIdAsync(id);
@@ -103,5 +103,6 @@ namespace ELibrary.Books.PublicAPI.Controllers
 
             return NotFound("No book exists in this category");
         }
+
     }
 }

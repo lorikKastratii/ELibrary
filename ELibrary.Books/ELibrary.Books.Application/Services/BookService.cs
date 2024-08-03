@@ -12,16 +12,16 @@ namespace ELibrary.Books.Application.Services
     public class BookService : IBookService
     {
         private readonly IBookRepository _bookRepository;
-        private readonly IAuthorService _authorService;
+        private readonly IAuthorRepository _authorRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<BookService> _logger;
 
-        public BookService(IBookRepository bookRepository, IMapper mapper, ILogger<BookService> logger, IAuthorService authorService)
+        public BookService(IBookRepository bookRepository, IMapper mapper, ILogger<BookService> logger, IAuthorRepository authorRepository)
         {
             _bookRepository = bookRepository;
             _mapper = mapper;
             _logger = logger;
-            _authorService = authorService;
+            _authorRepository = authorRepository;
         }
 
         public async Task<ServiceResponse<List<BookDto>>> GetBooksAsync()
@@ -45,9 +45,9 @@ namespace ELibrary.Books.Application.Services
                 return new ServiceResponse<BookDto>(BookErrors.BOOK_EMPTY);
             }
 
-            var author = await _authorService.GetAuthorByIdAsync(bookDto.AuthorId);
+            var author = await _authorRepository.GetAuthorByIdAsync(bookDto.AuthorId);
 
-            if (author.Data is null)
+            if (author is null)
             {
                 _logger.LogError("Cannot create book because Author with Id: {@id} does not exists", bookDto.AuthorId);
                 return new ServiceResponse<BookDto>(AuthorErrors.AUTHOR_NOT_FOUND);
@@ -125,6 +125,27 @@ namespace ELibrary.Books.Application.Services
             var booksDto = _mapper.Map<List<BookDto>>(books);
 
             return booksDto;
+        }
+
+        public async Task<ServiceResponse<List<BookDto>>> GetBooksByAuthorAsync(int authorId)
+        {
+            if (authorId <= 0)
+            {
+                _logger.LogError("Cannot fetch Books for Author. Id cannot be 0.");
+                return null;
+            }
+
+            var books = await _bookRepository.GetBooksByAuthorAsync(authorId);
+
+            if (books is null || books.Count == 0)
+            {
+                _logger.LogWarning("There are no books for Author with Id: {id}", authorId);
+                return new ServiceResponse<List<BookDto>>(BookErrors.AUTHOR_BOOKS_EMPTY);
+            }
+
+            var bookList = _mapper.Map<List<BookDto>>(books);
+
+            return new ServiceResponse<List<BookDto>>(bookList);
         }
     }
 }

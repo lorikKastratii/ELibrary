@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ELibrary.Books.Application\ELibrary.Books.Application.csproj" />
-    <ProjectReference Include="..\Elibrary.Books.Domain\Elibrary.Books.Domain.csproj" />
+    <ProjectReference Include="..\Elibrary.Books.Domain\ELibrary.Books.Domain.csproj" />
     <ProjectReference Include="..\ELibrary.Books.Infrastructure\ELibrary.Books.Infrastructure.csproj" />
   </ItemGroup>
 

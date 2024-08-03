@@ -76,5 +76,14 @@ namespace ELibrary.Books.Infrastructure.Repositories
 
             return books;
         }
+
+        public async Task<List<Book>> GetBooksByAuthorAsync(int authorId)
+        {
+            var books = await _context.Books
+                .Where(x => x.AuthorId == authorId)
+                .ToListAsync();
+
+            return books;
+        }
     }
 }

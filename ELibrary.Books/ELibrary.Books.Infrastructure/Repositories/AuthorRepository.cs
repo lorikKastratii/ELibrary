@@ -42,8 +42,7 @@ namespace ELibrary.Books.Infrastructure.Repositories
 
         public async Task<Author> GetAuthorByIdAsync(int id)
         {
-            var author = await _context.Authors.
-                FirstOrDefaultAsync(x => x.Id == id && x.IsActive);
+            var author = await _context.Authors.FindAsync(id);
 
             return author;
         }
@@ -55,6 +54,23 @@ namespace ELibrary.Books.Infrastructure.Repositories
                 ToListAsync();
 
             return authors;
+        }
+
+        public async Task<bool> UpdateAuthorAsync(Author author)
+        {
+            var authorEntity = await _context.Authors.FindAsync(author.Id);
+
+            if (authorEntity is null)
+            {
+                _logger.LogError("Updating Author failed. Author with Id: {id} does not exists.", author.Id);
+                return false;
+            }
+
+            _context.Entry(authorEntity).CurrentValues.SetValues(author);
+
+            var result = await _context.SaveChangesAsync();
+
+            return result == 1;
         }
     }
 }

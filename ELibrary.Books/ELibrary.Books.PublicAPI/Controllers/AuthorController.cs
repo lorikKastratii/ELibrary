@@ -12,11 +12,13 @@ namespace ELibrary.Books.PublicAPI.Controllers
     {
         private readonly IAuthorService _authorService;
         private readonly IMapper _mapper;
+        private readonly ILogger<AuthorController> _logger;
 
-        public AuthorController(IAuthorService authorService, IMapper mapper)
+        public AuthorController(IAuthorService authorService, IMapper mapper, ILogger<AuthorController> logger)
         {
             _authorService = authorService;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpGet("GetAuthorById")]
@@ -59,17 +61,45 @@ namespace ELibrary.Books.PublicAPI.Controllers
 
             if (response.IsSuccess is false)
             {
-                return Ok(response.Error?.Message);
+                _logger.LogError("Error fetching authors: {error}", response.Error?.Message);
+                return NotFound(response.Error?.Message);
             }
 
             return Ok(response.Data);
         }
 
         [HttpPost("UpdateAuthor")]
-        public IActionResult UpdateAuthor(UpdateAuthorRequest request)
+        public async Task<IActionResult> UpdateAuthor(UpdateAuthorRequest request)
         {
-            //TODO: implement this in service
-            return Ok();
+            if (request is null)
+            {
+                _logger.LogError("UpdateAuthor request is null.");
+                return BadRequest("Request cannot be null");
+            }
+
+            var authorDto = _mapper.Map<AuthorDto>(request);
+
+            var response = await _authorService.UpdateAuthorAsync(authorDto);
+
+            if (response.IsSuccess)
+            {
+                return Ok("Author updated successfully.");
+            }
+
+            return StatusCode(500, "Failed to update author");
+        }
+
+        [HttpGet("GetAuthorBooks")]
+        public async Task<IActionResult> GetAuthorBooks(int id)
+        {
+            var response = await _authorService.GetBooksByAuthorAsync(id);
+
+            if (response.IsSuccess is false)
+            {
+                return NotFound();
+            }
+
+            return Ok(response.Data);
         }
     }
 }

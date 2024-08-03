@@ -11,5 +11,6 @@ namespace ELibrary.Books.Application.Interfaces
         Task<bool> UpdateBookAsync(BookDto bookDto);
         Task<BookDto> GetBookByIdAsync(int id);
         Task<List<BookDto>> GetBooksByCategoryAsync(int categoryId);
+        Task<ServiceResponse<List<BookDto>>> GetBooksByAuthorAsync(int authorId);
     }
 }

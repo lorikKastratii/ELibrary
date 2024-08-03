@@ -69,17 +69,16 @@ namespace ELibrary.Books.PublicAPI.Controllers
             var book = _mapper.Map<BookDto>(request);
 
             var response = await _bookService.UpdateBookAsync(book);
+
             if (response is false)
             {
-                _logger.LogWarning("Failed to update book with Id: {id}", request.Id);
-
                 return BadRequest("Updating book failed");
             }
 
             return Ok("Book updated successfully!");
         }
 
-        [HttpGet("GetBookById{id}")]
+        [HttpGet("GetBookById/{id}")]
         public async Task<IActionResult> GetBookById(int id)
         {
             var book = await _bookService.GetBookByIdAsync(id);
@@ -104,5 +103,6 @@ namespace ELibrary.Books.PublicAPI.Controllers
 
             return NotFound("No book exists in this category");
         }
+
     }
 }

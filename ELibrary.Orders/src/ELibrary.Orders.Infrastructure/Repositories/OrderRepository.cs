@@ -15,7 +15,7 @@ namespace ELibrary.Orders.Infrastructure.Repositories
 
         public async Task<bool> CreateOrderAsync(Order order)
         {
-            if(order is null)
+            if (order is null)
             {
                 return false;
             }

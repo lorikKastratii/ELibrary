@@ -18,7 +18,7 @@ namespace ELibrary.Orders.Infrastructure.Clients
 
         public async Task<Book> GetBookAsync(int id)
         {
-            var url = $"{_httpClient.BaseAddress}book/getbookbyid{id}";
+            var url = $"{_httpClient.BaseAddress}book/getbookbyid/{id}";
 
             try
             {

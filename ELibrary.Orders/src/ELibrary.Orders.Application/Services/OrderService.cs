@@ -43,7 +43,7 @@ namespace ELibrary.Orders.Application.Services
 
             if (user is null)
             {
-                _logger.LogError("User with Id: {id} does not exists.", request.UserId);
+                _logger.LogError("Failed to create order because User with Id: {id} does not exists.", request.UserId);
                 return null;
             }
 
@@ -64,6 +64,8 @@ namespace ELibrary.Orders.Application.Services
             {
                 result.OutOfStockItems = outOfStockItems;
             }
+
+            //TODO: Update Stock
 
             return result;
         }
@@ -123,6 +125,7 @@ namespace ELibrary.Orders.Application.Services
                 ShippingPostalCode = request.ShippingPostalCode,
                 ShippingCountry = request.ShippingCountry,
                 CreatedDate = DateTime.UtcNow,
+                UpdatedDate = null,
                 OrderItems = orderItems,
                 IsActive = true
             };

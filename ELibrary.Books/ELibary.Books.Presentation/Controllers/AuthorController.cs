@@ -4,7 +4,7 @@ using ELibrary.Books.Application.Interfaces;
 using ELibrary.Books.Application.Requests.Author;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ELibrary.Books.PublicAPI.Controllers
+namespace ELibary.Books.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

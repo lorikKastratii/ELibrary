@@ -32,4 +32,8 @@
     <ProjectReference Include="..\ELibrary.Books.Infrastructure\ELibrary.Books.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>

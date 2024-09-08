@@ -1,0 +1,6 @@
+@ELibary.Books.Presentation_HostAddress = http://localhost:5121
+
+GET {{ELibary.Books.Presentation_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

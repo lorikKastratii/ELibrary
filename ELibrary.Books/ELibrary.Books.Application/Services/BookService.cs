@@ -5,6 +5,7 @@ using ELibrary.Books.Application.Dtos.Book;
 using ELibrary.Books.Application.Extensions;
 using ELibrary.Books.Application.Extensions.Errors;
 using ELibrary.Books.Application.Interfaces;
+using ELibrary.Books.Domain.Exceptions.Book;
 using Microsoft.Extensions.Logging;
 
 namespace ELibrary.Books.Application.Services
@@ -85,25 +86,26 @@ namespace ELibrary.Books.Application.Services
             return response;
         }
 
-        public async Task<BookDto> GetBookByIdAsync(int id)
+        public async Task<ServiceResponse<BookDto>> GetBookByIdAsync(int id, CancellationToken cancellationToken)
         {
             if (id <= 0)
             {
                 _logger.LogError("Invalid Id: {id}. Id cannot be 0", id);
-                return null;
+                return ServiceResponse<BookDto>.Failure("The id provided is invalid");
             }
-
-            var book = await _bookRepository.GetBookByIdAsync(id);
-
-            if (book is null)
+            try
             {
-                _logger.LogWarning("Book with Id: {id} not found", id);
-                return null;
+                var book = await _bookRepository.GetBookByIdAsync(id, cancellationToken);
+                var bookDto = _mapper.Map<BookDto>(book);
+
+                return ServiceResponse<BookDto>.Success(bookDto);
             }
-
-            var bookDto = _mapper.Map<BookDto>(book);
-
-            return bookDto;
+            catch(BookNotFoundException ex)
+            {
+                _logger.LogInformation($"Book with Id: {id} does not exists", id);
+                return ServiceResponse<BookDto>.Failure(BookErrors.BOOK_NOT_FOUND);
+            }
+            
         }
 
         public async Task<List<BookDto>> GetBooksByCategoryAsync(int categoryId)

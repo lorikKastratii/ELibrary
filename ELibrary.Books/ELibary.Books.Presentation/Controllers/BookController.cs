@@ -79,9 +79,9 @@ namespace ELibary.Books.Presentation.Controllers
         }
 
         [HttpGet("GetBookById/{id}")]
-        public async Task<IActionResult> GetBookById(int id)
+        public async Task<IActionResult> GetBookById(int id, CancellationToken cancellationToken)
         {
-            var book = await _bookService.GetBookByIdAsync(id);
+            var book = await _bookService.GetBookByIdAsync(id, cancellationToken);
 
             if (book is not null)
             {

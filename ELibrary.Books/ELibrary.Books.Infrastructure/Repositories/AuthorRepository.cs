@@ -1,5 +1,6 @@
 ﻿using Elibrary.Books.Domain.Entity;
 using Elibrary.Books.Domain.Interfaces;
+using ELibrary.Books.Domain.Interfaces;
 using ELibrary.Books.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -10,11 +11,12 @@ namespace ELibrary.Books.Infrastructure.Repositories
     {
         private readonly AppDbContext _context;
         private readonly ILogger<AuthorRepository> _logger;
-
-        public AuthorRepository(AppDbContext context, ILogger<AuthorRepository> logger)
+        private readonly IUnitOfWork _unitOfWork;
+        public AuthorRepository(AppDbContext context, ILogger<AuthorRepository> logger, IUnitOfWork unitOfWork)
         {
             _context = context;
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Author> CreateAsync(Author author)
@@ -22,7 +24,7 @@ namespace ELibrary.Books.Infrastructure.Repositories
             try
             {
                 await _context.Authors.AddAsync(author);
-                var result = await _context.SaveChangesAsync();
+                var result = await _unitOfWork.SaveChangesAsync();
 
                 if (result != 1)
                 {
@@ -68,7 +70,7 @@ namespace ELibrary.Books.Infrastructure.Repositories
 
             _context.Entry(authorEntity).CurrentValues.SetValues(author);
 
-            var result = await _context.SaveChangesAsync();
+            var result = await _unitOfWork.SaveChangesAsync();
 
             return result == 1;
         }

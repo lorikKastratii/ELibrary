@@ -100,7 +100,7 @@ namespace ELibrary.Books.Application.Services
                 return new ServiceResponse<bool>(AuthorErrors.AUTHOR_UPDATING_FAILED);
             }
 
-            return new ServiceResponse<bool>();
+            return ServiceResponse<bool>.Success();
         }
 
         public async Task<ServiceResponse<List<BookDto>>> GetBooksByAuthorAsync(int authorId)

@@ -90,9 +90,9 @@ namespace ELibary.Books.Presentation.Controllers
         }
 
         [HttpGet("GetAuthorBooks")]
-        public async Task<IActionResult> GetAuthorBooks(int id)
+        public async Task<IActionResult> GetAuthorBooks(int id, CancellationToken cancellationToken)
         {
-            var response = await _authorService.GetBooksByAuthorAsync(id);
+            var response = await _authorService.GetBooksByAuthorAsync(id, cancellationToken);
 
             if (response.IsSuccess is false)
             {

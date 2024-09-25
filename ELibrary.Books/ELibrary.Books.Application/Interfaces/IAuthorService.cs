@@ -11,6 +11,6 @@ namespace ELibrary.Books.Application.Interfaces
         Task<ServiceResponse<List<AuthorDto>>> GetAuthorsAsync();
         Task<ServiceResponse<AuthorDto>> CreateAuthorAsync(AuthorDto author);
         Task<ServiceResponse<bool>> UpdateAuthorAsync(AuthorDto authorDto);
-        Task<ServiceResponse<List<BookDto>>> GetBooksByAuthorAsync(int authorId);
+        Task<ServiceResponse<List<BookDto>>> GetBooksByAuthorAsync(int authorId, CancellationToken cancellationToken);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Elibrary.Books.Domain.Entity;
 using Elibrary.Books.Domain.Interfaces;
+using ELibrary.Books.Application.Dtos.Book;
 using ELibrary.Books.Domain.Exceptions.Book;
 using ELibrary.Books.Domain.Interfaces;
 using ELibrary.Books.Infrastructure.Data;
@@ -21,22 +22,22 @@ namespace ELibrary.Books.Infrastructure.Repositories
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<Book>> GetBooksAsync()
+        public async Task<List<Book>> GetBooksAsync(CancellationToken cancellationToken)
         {
             var books = await _context.Books
                 .AsNoTracking()
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return books;
         }
 
-        public async Task<bool> CreateBookAsync(Book book)
+        public async Task<bool> CreateBookAsync(Book book, CancellationToken cancellationToken)
         {
-            await _context.Books.AddAsync(book);
+            await _context.Books.AddAsync(book, cancellationToken);
 
             try
             {
-                var result = await _unitOfWork.SaveChangesAsync();
+                var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
 
                 return result > 0;
             }
@@ -47,19 +48,19 @@ namespace ELibrary.Books.Infrastructure.Repositories
             }
         }
 
-        public async Task<bool> UpdateBookAsync(Book book)
+        public async Task<bool> UpdateBookAsync(Book book, CancellationToken cancellationToken)
         {
-            var bookEntity = await _context.Books.FindAsync(book.Id);
+            var bookEntity = await _context.Books.FindAsync(book.Id, cancellationToken);
 
             if (bookEntity is null)
             {
-                //TODO: add log here
+                _logger.LogError("Failed to update book. Book with Id: {id} does not exist.", book.Id);
                 return false;
             }
 
             _context.Entry(bookEntity).CurrentValues.SetValues(book);
 
-            var result = await _context.SaveChangesAsync();
+            var result = await _context.SaveChangesAsync(cancellationToken);
 
             return result == 1;
         }
@@ -72,24 +73,25 @@ namespace ELibrary.Books.Infrastructure.Repositories
             {
                 throw new BookNotFoundException(id);
             }
+
             return book;
         }
 
-        public async Task<List<Book>> GetBooksByCategoryAsync(int categoryId)
+        public async Task<List<Book>> GetBooksByCategoryAsync(int categoryId, CancellationToken cancellationToken)
         {
             var books = await _context.Books
                 .Where(x => x.BookCategories.Any(bc => bc.CategoryId == categoryId))
                 .AsNoTracking()
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return books;
         }
 
-        public async Task<List<Book>> GetBooksByAuthorAsync(int authorId)
+        public async Task<List<Book>> GetBooksByAuthorAsync(int authorId, CancellationToken cancellationToken)
         {
             var books = await _context.Books
                 .Where(x => x.AuthorId == authorId)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return books;
         }

@@ -1,6 +1,7 @@
 ﻿using ELibrary.Orders.Domain.Entity;
 using ELibrary.Orders.Domain.Interfaces;
 using ELibrary.Orders.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ELibrary.Orders.Infrastructure.Repositories
 {
@@ -27,9 +28,9 @@ namespace ELibrary.Orders.Infrastructure.Repositories
             return result > 0;
         }
 
-        public List<Order> GetAllOrders()
+        public async Task<List<Order>> GetAllOrdersAsync()
         {
-            var orders = _context.Orders.ToList();
+            var orders = await _context.Orders.ToListAsync();
 
             return orders;
         }

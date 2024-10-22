@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using ELibrary.Orders.Application.Clients.Interfaces;
 using ELibrary.Orders.Application.Dtos;
+using ELibrary.Orders.Application.Extensions;
+using ELibrary.Orders.Application.Extensions.Errors;
 using ELibrary.Orders.Application.Interfaces;
 using ELibrary.Orders.Application.Requests;
 using ELibrary.Orders.Domain.Entity;
@@ -31,20 +33,14 @@ namespace ELibrary.Orders.Application.Services
             _userClient = userClient;
         }
 
-        public async Task<OrderResultDto> CreateOrderAsync(CreateOrderRequest request)
+        public async Task<ServiceResponse<OrderResultDto>> CreateOrderAsync(CreateOrderRequest request)
         {
-            if (request is null)
-            {
-                _logger.LogError("Request cannot be empty.");
-                return null;
-            }
-
             var user = await _userClient.GetUserById(request.UserId);
 
             if (user is null)
             {
                 _logger.LogError("Failed to create order because User with Id: {id} does not exists.", request.UserId);
-                return null;
+                return ServiceResponse<OrderResultDto>.Failure(OrderErrors.UserNotFound);
             }
 
             var orderItems = new List<OrderItem>();
@@ -55,7 +51,7 @@ namespace ELibrary.Orders.Application.Services
             if (orderItems.Any() is false)
             {
                 _logger.LogError("Currently we don't have stock for these items: {@items}", request.OrderItems);
-                return null;
+                return ServiceResponse<OrderResultDto>.Failure(OrderErrors.StockEmpty);
             }
 
             var result = await CreateOrderAsync(request, orderItems);
@@ -63,16 +59,17 @@ namespace ELibrary.Orders.Application.Services
             if (result is not null)
             {
                 result.OutOfStockItems = outOfStockItems;
+                //map and return success case
             }
 
             //TODO: Update Stock
 
-            return result;
+            return ServiceResponse<OrderResultDto>.Failure(OrderErrors.InternalError);
         }
 
-        public List<Order> GetOrders()
+        public async Task<List<Order>> GetOrdersAsync()
         {
-            return _orderRepository.GetAllOrders();
+            return await _orderRepository.GetAllOrdersAsync();
         }
 
         private decimal CalculateTotalAmount(List<OrderItem> orderItems)
@@ -88,22 +85,31 @@ namespace ELibrary.Orders.Application.Services
         }
 
         private async Task<(List<OrderItem>, List<OrderItemDto>)> CalculateItemsAsync(List<OrderItem> orderItems, List<OrderItemDto> outOfStockItems, CreateOrderRequest request)
-        {
+        {            
             foreach (var item in request.OrderItems)
             {
                 var book = await _bookClient.GetBookAsync(item.BookId);
 
-                if (book is null || book.StockQuantity < item.Quantity)
+                if (book is null || book.StockQuantity == 0)
                 {
                     _logger.LogWarning("Currently we don't have stock for item with Id: {Id}", item.BookId);
-                    outOfStockItems.Add(new OrderItemDto { BookId = item.BookId });
+                    outOfStockItems.Add(new OrderItemDto { BookId = item.BookId, Quantity = item.Quantity });
                     continue;
+                }
+
+                var availableQuantity = book.StockQuantity;
+
+                //10 || 17
+                if (availableQuantity < item.Quantity)
+                {
+                    var unavailableQuantity = item.Quantity - availableQuantity;
+                    outOfStockItems.Add(new OrderItemDto { BookId = item.BookId, Quantity = unavailableQuantity });
                 }
 
                 orderItems.Add(new OrderItem
                 {
                     BookId = item.BookId,
-                    Quantity = item.Quantity,
+                    Quantity = availableQuantity,
                     UnitPrice = item.UnitPrice,
                     CreatedDate = DateTime.UtcNow
                 });

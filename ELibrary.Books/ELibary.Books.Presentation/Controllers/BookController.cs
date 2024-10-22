@@ -22,9 +22,9 @@ namespace ELibary.Books.Presentation.Controllers
         }
 
         [HttpGet("GetBooks")]
-        public async Task<IActionResult> GetBooks()
+        public async Task<IActionResult> GetBooksAsync(CancellationToken cancellationToken)
         {
-            var response = await _bookService.GetBooksAsync();
+            var response = await _bookService.GetBooksAsync(cancellationToken);
 
             if (response.IsSuccess)
             {
@@ -35,7 +35,7 @@ namespace ELibary.Books.Presentation.Controllers
         }
 
         [HttpPost("CreateBook")]
-        public async Task<IActionResult> CreateBook(CreateBookRequest request)
+        public async Task<IActionResult> CreateBook(CreateBookRequest request, CancellationToken cancellationToken)
         {
             if (request is null)
             {
@@ -44,7 +44,7 @@ namespace ELibary.Books.Presentation.Controllers
 
             var bookDto = _mapper.Map<BookDto>(request);
 
-            var response = await _bookService.CreateBookAsync(bookDto);
+            var response = await _bookService.CreateBookAsync(bookDto, cancellationToken);
 
             if (response.IsSuccess)
             {
@@ -57,7 +57,7 @@ namespace ELibary.Books.Presentation.Controllers
         }
 
         [HttpPost("UpdateBook")]
-        public async Task<IActionResult> UpdateBook(UpdateBookRequest request)
+        public async Task<IActionResult> UpdateBook(UpdateBookRequest request, CancellationToken cancellationToken)
         {
             if (request is null)
             {
@@ -68,9 +68,9 @@ namespace ELibary.Books.Presentation.Controllers
 
             var book = _mapper.Map<BookDto>(request);
 
-            var response = await _bookService.UpdateBookAsync(book);
+            var response = await _bookService.UpdateBookAsync(book, cancellationToken);
 
-            if (response is false)
+            if (response.IsSuccess is false)
             {
                 return BadRequest("Updating book failed");
             }
@@ -81,22 +81,22 @@ namespace ELibary.Books.Presentation.Controllers
         [HttpGet("GetBookById/{id}")]
         public async Task<IActionResult> GetBookById(int id, CancellationToken cancellationToken)
         {
-            var book = await _bookService.GetBookByIdAsync(id, cancellationToken);
+            var response = await _bookService.GetBookByIdAsync(id, cancellationToken);
 
-            if (book is not null)
+            if (response.IsSuccess)
             {
-                return Ok(book);
+                return Ok(response.Data);
             }
 
             return NotFound("Book does not exists");
         }
 
         [HttpGet("GetBooksByCategory{id}")]
-        public async Task<IActionResult> GetBooksByCategory(int id)
+        public async Task<IActionResult> GetBooksByCategory(int id, CancellationToken cancellationToken)
         {
-            var books = await _bookService.GetBooksByCategoryAsync(id);
+            var books = await _bookService.GetBooksByCategoryAsync(id, cancellationToken);
 
-            if (books is not null && books.Count() > 1)
+            if (books is not null)
             {
                 return Ok(books);
             }

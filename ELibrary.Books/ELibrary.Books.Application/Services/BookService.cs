@@ -7,6 +7,7 @@ using ELibrary.Books.Application.Extensions.Errors;
 using ELibrary.Books.Application.Interfaces;
 using ELibrary.Books.Domain.Exceptions.Book;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace ELibrary.Books.Application.Services
 {
@@ -25,9 +26,9 @@ namespace ELibrary.Books.Application.Services
             _authorRepository = authorRepository;
         }
 
-        public async Task<ServiceResponse<List<BookDto>>> GetBooksAsync()
+        public async Task<ServiceResponse<List<BookDto>>> GetBooksAsync(CancellationToken cancellationToken)
         {
-            var books = await _bookRepository.GetBooksAsync();
+            var books = await _bookRepository.GetBooksAsync(cancellationToken);
 
             if (books is null || books.Any() is false)
             {
@@ -39,7 +40,7 @@ namespace ELibrary.Books.Application.Services
             return new ServiceResponse<List<BookDto>> { Data = bookDtos };
         }
 
-        public async Task<ServiceResponse<BookDto>> CreateBookAsync(BookDto bookDto)
+        public async Task<ServiceResponse<BookDto>> CreateBookAsync(BookDto bookDto, CancellationToken cancellationToken)
         {
             if (bookDto is null)
             {
@@ -56,7 +57,7 @@ namespace ELibrary.Books.Application.Services
 
             var book = _mapper.Map<Book>(bookDto);
 
-            var result = await _bookRepository.CreateBookAsync(book);
+            var result = await _bookRepository.CreateBookAsync(book, cancellationToken);
 
             if (result is false)
             {
@@ -66,24 +67,25 @@ namespace ELibrary.Books.Application.Services
             return new ServiceResponse<BookDto>(bookDto);
         }
 
-        public async Task<bool> UpdateBookAsync(BookDto bookDto)
+        public async Task<ServiceResponse<bool>> UpdateBookAsync(BookDto bookDto, CancellationToken cancellationToken)
         {
             if (bookDto is null)
             {
                 _logger.LogWarning("Book cannot be null");
-                return false;
+                return ServiceResponse<bool>.Failure(BookErrors.BOOK_EMPTY);
             }
 
             var book = _mapper.Map<Book>(bookDto);
 
-            var response = await _bookRepository.UpdateBookAsync(book);
+            var response = await _bookRepository.UpdateBookAsync(book, cancellationToken);
 
             if (response is false)
             {
                 _logger.LogWarning("Failed to update book with Id: {id}", bookDto.Id);
+                return ServiceResponse<bool>.Failure(BookErrors.BOOK_UPDATING_FAILED);
             }
 
-            return response;
+            return ServiceResponse<bool>.Success(true);
         }
 
         public async Task<ServiceResponse<BookDto>> GetBookByIdAsync(int id, CancellationToken cancellationToken)
@@ -108,28 +110,37 @@ namespace ELibrary.Books.Application.Services
             
         }
 
-        public async Task<List<BookDto>> GetBooksByCategoryAsync(int categoryId)
+        public async Task<Author[]> DoSomethingAsync(int id1)
+        {
+            var author1Task = _authorRepository.GetAuthorByIdAsync(id1);
+            var author1SecondTask = _authorRepository.GetAuthorByIdAsync(id1);
+
+            var authors = await Task.WhenAll(author1Task, author1SecondTask);
+
+            return authors;
+        }
+
+        public async Task<ServiceResponse<List<BookDto>>> GetBooksByCategoryAsync(int categoryId, CancellationToken cancellationToken)
         {
             if (categoryId <= 0)
             {
                 _logger.LogError("Category Id: {id} cannot be negative.", categoryId);
-
-                return null;
+                return ServiceResponse<List<BookDto>>.Failure(BookErrors.BOOK_NOT_FOUND);
             }
 
-            var books = await _bookRepository.GetBooksByCategoryAsync(categoryId);
+            var books = await _bookRepository.GetBooksByCategoryAsync(categoryId, cancellationToken);
 
             if (books is null || books.Any() is false)
             {
                 _logger.LogError("No books exists for CategoryId: {id}.", categoryId);
+                return ServiceResponse<List<BookDto>>.Failure(BookErrors.BOOK_NOT_FOUND);
             }
 
             var booksDto = _mapper.Map<List<BookDto>>(books);
-
-            return booksDto;
+            return ServiceResponse<List<BookDto>>.Success(booksDto);
         }
 
-        public async Task<ServiceResponse<List<BookDto>>> GetBooksByAuthorAsync(int authorId)
+        public async Task<ServiceResponse<List<BookDto>>> GetBooksByAuthorAsync(int authorId, CancellationToken cancellationToken)
         {
             if (authorId <= 0)
             {
@@ -137,7 +148,7 @@ namespace ELibrary.Books.Application.Services
                 return null;
             }
 
-            var books = await _bookRepository.GetBooksByAuthorAsync(authorId);
+            var books = await _bookRepository.GetBooksByAuthorAsync(authorId, cancellationToken);
 
             if (books is null || books.Count == 0)
             {

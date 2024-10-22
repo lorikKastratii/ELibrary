@@ -6,11 +6,11 @@ namespace ELibrary.Books.Application.Interfaces
 {
     public interface IBookService
     {
-        Task<ServiceResponse<List<BookDto>>> GetBooksAsync();
-        Task<ServiceResponse<BookDto>> CreateBookAsync(BookDto bookDto);
-        Task<bool> UpdateBookAsync(BookDto bookDto);
+        Task<ServiceResponse<List<BookDto>>> GetBooksAsync(CancellationToken cancellationToken);
+        Task<ServiceResponse<BookDto>> CreateBookAsync(BookDto bookDto, CancellationToken cancellationToken);
+        Task<ServiceResponse<bool>> UpdateBookAsync(BookDto bookDto, CancellationToken cancellationToken);
         Task<ServiceResponse<BookDto>> GetBookByIdAsync(int id, CancellationToken cancellationToken);
-        Task<List<BookDto>> GetBooksByCategoryAsync(int categoryId);
-        Task<ServiceResponse<List<BookDto>>> GetBooksByAuthorAsync(int authorId);
+        Task<ServiceResponse<List<BookDto>>> GetBooksByCategoryAsync(int categoryId, CancellationToken cancellationToken);
+        Task<ServiceResponse<List<BookDto>>> GetBooksByAuthorAsync(int authorId, CancellationToken cancellationToken);
     }
 }

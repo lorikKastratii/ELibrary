@@ -4,11 +4,11 @@ namespace Elibrary.Books.Domain.Interfaces
 {
     public interface IBookRepository
     {
-        Task<List<Book>> GetBooksAsync();
-        Task<bool> CreateBookAsync(Book book);
-        Task<bool> UpdateBookAsync(Book book);
+        Task<List<Book>> GetBooksAsync(CancellationToken cancellationToken);
+        Task<bool> CreateBookAsync(Book book, CancellationToken cancellationToken);
+        Task<bool> UpdateBookAsync(Book book, CancellationToken cancellationToken);
         Task<Book> GetBookByIdAsync(int id, CancellationToken cancellationToken);
-        Task<List<Book>> GetBooksByCategoryAsync(int categoryId);
-        Task<List<Book>> GetBooksByAuthorAsync(int authorId);
+        Task<List<Book>> GetBooksByCategoryAsync(int categoryId, CancellationToken cancellationToken);
+        Task<List<Book>> GetBooksByAuthorAsync(int authorId, CancellationToken cancellationToken);
     }
 }

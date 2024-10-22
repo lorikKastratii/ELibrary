@@ -100,10 +100,10 @@ namespace ELibrary.Books.Application.Services
                 return new ServiceResponse<bool>(AuthorErrors.AUTHOR_UPDATING_FAILED);
             }
 
-            return ServiceResponse<bool>.Success();
+            return ServiceResponse<bool>.Success(true);
         }
 
-        public async Task<ServiceResponse<List<BookDto>>> GetBooksByAuthorAsync(int authorId)
+        public async Task<ServiceResponse<List<BookDto>>> GetBooksByAuthorAsync(int authorId, CancellationToken cancellationToken)
         {
             if (authorId <= 0)
             {
@@ -119,7 +119,7 @@ namespace ELibrary.Books.Application.Services
                 return new ServiceResponse<List<BookDto>>(AuthorErrors.AUTHOR_NOT_FOUND);
             }
 
-            var response = await _bookService.GetBooksByAuthorAsync(authorId);
+            var response = await _bookService.GetBooksByAuthorAsync(authorId, cancellationToken);
 
             if (response.IsSuccess)
             {

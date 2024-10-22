@@ -1,4 +1,5 @@
 ﻿using Elibrary.Books.Domain.Interfaces;
+using ELibrary.Books.Domain.Interfaces;
 using ELibrary.Books.Infrastructure.Data;
 using ELibrary.Books.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ namespace ELibrary.Books.Infrastructure
     {
         public static IServiceCollection AddInfrastructureModule(this IServiceCollection services)
         {
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IAuthorRepository, AuthorRepository>();

@@ -81,11 +81,11 @@ namespace ELibary.Books.Presentation.Controllers
         [HttpGet("GetBookById/{id}")]
         public async Task<IActionResult> GetBookById(int id, CancellationToken cancellationToken)
         {
-            var book = await _bookService.GetBookByIdAsync(id, cancellationToken);
+            var response = await _bookService.GetBookByIdAsync(id, cancellationToken);
 
-            if (book is not null)
+            if (response.IsSuccess)
             {
-                return Ok(book);
+                return Ok(response.Data);
             }
 
             return NotFound("Book does not exists");

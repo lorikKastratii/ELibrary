@@ -110,6 +110,16 @@ namespace ELibrary.Books.Application.Services
             
         }
 
+        public async Task<Author[]> DoSomethingAsync(int id1)
+        {
+            var author1Task = _authorRepository.GetAuthorByIdAsync(id1);
+            var author1SecondTask = _authorRepository.GetAuthorByIdAsync(id1);
+
+            var authors = await Task.WhenAll(author1Task, author1SecondTask);
+
+            return authors;
+        }
+
         public async Task<ServiceResponse<List<BookDto>>> GetBooksByCategoryAsync(int categoryId, CancellationToken cancellationToken)
         {
             if (categoryId <= 0)

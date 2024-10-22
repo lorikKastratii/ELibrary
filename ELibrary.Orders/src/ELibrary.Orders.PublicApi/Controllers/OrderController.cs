@@ -28,9 +28,9 @@ namespace ELibrary.Orders.PublicApi.Controllers
 
         [Authorize]
         [HttpGet("GetOrders")]
-        public IActionResult GetOrders()
+        public async Task<IActionResult> GetOrders()
         {
-            var orders = _orderService.GetOrders();
+            var orders = await _orderService.GetOrdersAsync();
 
             if (orders.Any())
             {
@@ -43,19 +43,19 @@ namespace ELibrary.Orders.PublicApi.Controllers
         [HttpPost("CreateOrder")]
         public async Task<IActionResult> CreateOrderAsync(CreateOrderRequest request)
         {
-            if(request is null)
+            if (request is null)
             {
                 return BadRequest();
             }
 
             var response = await _orderService.CreateOrderAsync(request);
 
-            if(response is null)
+            if (response.IsSuccess is false)
             {
-                return Ok("Failed to create order");
+                return Ok(response.Error?.Message);
             }
 
-            return Ok(response);
+            return Ok(response.Data);
         }
     }
 }

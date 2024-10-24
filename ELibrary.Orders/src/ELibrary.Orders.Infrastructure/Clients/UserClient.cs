@@ -24,7 +24,7 @@ namespace ELibrary.Orders.Infrastructure.Clients
             _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         }
 
-        public async Task<User> GetUserById(int id)
+        public async Task<User> GetUserByIdAsync(int id)
         {
             var user = new User();
 

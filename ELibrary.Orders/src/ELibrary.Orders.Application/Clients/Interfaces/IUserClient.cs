@@ -4,6 +4,6 @@ namespace ELibrary.Orders.Application.Clients.Interfaces
 {
     public interface IUserClient
     {
-        Task<User> GetUserById(int id);
+        Task<User> GetUserByIdAsync(int id);
     }
 }

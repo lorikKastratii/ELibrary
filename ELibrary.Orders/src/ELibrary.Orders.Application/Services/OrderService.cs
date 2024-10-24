@@ -35,7 +35,7 @@ namespace ELibrary.Orders.Application.Services
 
         public async Task<ServiceResponse<OrderResultDto>> CreateOrderAsync(CreateOrderRequest request)
         {
-            var user = await _userClient.GetUserById(request.UserId);
+            var user = await _userClient.GetUserByIdAsync(request.UserId);
 
             if (user is null)
             {

@@ -28,6 +28,13 @@ namespace ELibrary.Orders.Tests.Tests
 
             //Assert
             result.IsSuccess.Should().Be(true);
+            result.Data.Should().NotBeNull();
+
+            builder
+                .VerifyGetBookIsCalled((byte)request.OrderItems.Count)
+                .VerifyGetUserByIdIsCalled()
+                .VerifyOrderRepositoryIsCalled()
+                .VerifyNoOtherCalls();
         }
     }
 }

@@ -50,6 +50,36 @@ namespace ELibrary.Orders.Tests.Builders
             return this;
         }
 
+        public OrderServiceBuilder VerifyOrderRepositoryIsCalled(byte numberOfTimes = 1)
+        {
+            _orderRepositoryMock.Verify(x => x.CreateOrderAsync(It.IsAny<Order>()), Times.Exactly(numberOfTimes));
+
+            return this;
+        }
+        
+        public OrderServiceBuilder VerifyGetUserByIdIsCalled(byte numberOfTimes = 1)
+        {
+            _userClientMock.Verify(x => x.GetUserByIdAsync(It.IsAny<int>()), Times.Exactly(numberOfTimes));
+
+            return this;
+        }
+        
+        public OrderServiceBuilder VerifyGetBookIsCalled(byte numberOfTimes = 1)
+        {
+            _bookClientMock.Verify(x => x.GetBookAsync(It.IsAny<int>()), Times.Exactly(numberOfTimes));
+
+            return this;
+        }
+
+        public OrderServiceBuilder VerifyNoOtherCalls()
+        {
+            _orderRepositoryMock.VerifyNoOtherCalls();
+            _userClientMock.VerifyNoOtherCalls();
+            _bookClientMock.VerifyNoOtherCalls();
+
+            return this;
+        }
+
         public OrderService Build()
         {
             return new OrderService(_orderRepositoryMock.Object, _bookClientMock.Object,

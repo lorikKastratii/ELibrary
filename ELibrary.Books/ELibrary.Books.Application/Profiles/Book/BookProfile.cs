@@ -2,7 +2,7 @@
 using ELibrary.Books.Application.Dtos.Book;
 using ELibrary.Books.Application.Requests.Book;
 
-using BookEntity = Elibrary.Books.Domain.Entity.Book;
+using BookEntity = ELibrary.Books.Domain.Entity.Book;
 
 namespace ELibrary.Books.Application.Profiles.Book
 {

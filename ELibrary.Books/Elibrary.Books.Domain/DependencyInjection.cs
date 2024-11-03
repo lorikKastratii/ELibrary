@@ -1,7 +1,7 @@
 ﻿using ELibrary.Books.Domain.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Elibrary.Books.Domain
+namespace ELibrary.Books.Domain
 {
     public static class DependencyInjection
     {

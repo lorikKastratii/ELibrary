@@ -22,7 +22,7 @@ namespace ELibrary.Books.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Elibrary.Books.Domain.Entity.Author", b =>
+            modelBuilder.Entity("ELibrary.Books.Domain.Entity.Author", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -55,7 +55,7 @@ namespace ELibrary.Books.Infrastructure.Migrations
                     b.ToTable("Authors");
                 });
 
-            modelBuilder.Entity("Elibrary.Books.Domain.Entity.Book", b =>
+            modelBuilder.Entity("ELibrary.Books.Domain.Entity.Book", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -103,7 +103,7 @@ namespace ELibrary.Books.Infrastructure.Migrations
                     b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("Elibrary.Books.Domain.Entity.BookCategory", b =>
+            modelBuilder.Entity("ELibrary.Books.Domain.Entity.BookCategory", b =>
                 {
                     b.Property<int>("BookId")
                         .HasColumnType("int");
@@ -118,7 +118,7 @@ namespace ELibrary.Books.Infrastructure.Migrations
                     b.ToTable("BookCategories");
                 });
 
-            modelBuilder.Entity("Elibrary.Books.Domain.Entity.Category", b =>
+            modelBuilder.Entity("ELibrary.Books.Domain.Entity.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -148,9 +148,9 @@ namespace ELibrary.Books.Infrastructure.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Elibrary.Books.Domain.Entity.Book", b =>
+            modelBuilder.Entity("ELibrary.Books.Domain.Entity.Book", b =>
                 {
-                    b.HasOne("Elibrary.Books.Domain.Entity.Author", "Author")
+                    b.HasOne("ELibrary.Books.Domain.Entity.Author", "Author")
                         .WithMany("Books")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -159,15 +159,15 @@ namespace ELibrary.Books.Infrastructure.Migrations
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("Elibrary.Books.Domain.Entity.BookCategory", b =>
+            modelBuilder.Entity("ELibrary.Books.Domain.Entity.BookCategory", b =>
                 {
-                    b.HasOne("Elibrary.Books.Domain.Entity.Book", "Book")
+                    b.HasOne("ELibrary.Books.Domain.Entity.Book", "Book")
                         .WithMany("BookCategories")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Elibrary.Books.Domain.Entity.Category", "Category")
+                    b.HasOne("ELibrary.Books.Domain.Entity.Category", "Category")
                         .WithMany("BookCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -178,17 +178,17 @@ namespace ELibrary.Books.Infrastructure.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Elibrary.Books.Domain.Entity.Author", b =>
+            modelBuilder.Entity("ELibrary.Books.Domain.Entity.Author", b =>
                 {
                     b.Navigation("Books");
                 });
 
-            modelBuilder.Entity("Elibrary.Books.Domain.Entity.Book", b =>
+            modelBuilder.Entity("ELibrary.Books.Domain.Entity.Book", b =>
                 {
                     b.Navigation("BookCategories");
                 });
 
-            modelBuilder.Entity("Elibrary.Books.Domain.Entity.Category", b =>
+            modelBuilder.Entity("ELibrary.Books.Domain.Entity.Category", b =>
                 {
                     b.Navigation("BookCategories");
                 });

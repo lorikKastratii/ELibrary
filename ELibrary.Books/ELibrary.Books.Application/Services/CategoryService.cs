@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Elibrary.Books.Domain.Entity;
-using Elibrary.Books.Domain.Interfaces;
+using ELibrary.Books.Domain.Entity;
+using ELibrary.Books.Domain.Interfaces;
 using ELibrary.Books.Application.Dtos.Category;
 using ELibrary.Books.Application.Extensions;
 using ELibrary.Books.Application.Extensions.Errors;

@@ -3,7 +3,7 @@ using ELibrary.Books.Application.Dtos.Category;
 using ELibrary.Books.Application.Models;
 using ELibrary.Books.Application.Requests.Category;
 
-using CategoryEntity = Elibrary.Books.Domain.Entity.Category;
+using CategoryEntity = ELibrary.Books.Domain.Entity.Category;
 
 namespace ELibrary.Books.Application.Profiles.Category
 {

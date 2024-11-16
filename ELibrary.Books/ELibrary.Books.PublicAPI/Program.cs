@@ -26,7 +26,7 @@ namespace ELibrary.Books.PublicAPI
             builder.Services
                 .AddDomainModule()
                 .AddApplicationModule()
-                .AddInfrastructureModule();
+                .AddInfrastructureModule(builder.Configuration);
 
             var app = builder.Build();
 

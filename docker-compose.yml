@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  elibrary.users:
+    build:
+      context: ./ELibrary.Users
+    image: elibrary.users.publicapi
+    ports:
+      - "8081:8080"
+    networks:
+      - elibrary_network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - UserService__BaseUrl=http://localhost:8081
+    depends_on:
+      - sqlserver
+
+  elibrary.orders:
+    build:
+      context: ./ELibrary.Orders/src
+    image: elibrary.orders.publicapi
+    ports:
+      - "8082:8080"
+    networks:
+      - elibrary_network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - UserService__BaseUrl=http://elibrary.users:8080
+    depends_on:
+      - elibrary.users
+
+  elibrary.books:
+    build:
+      context: ./ELibrary.Books
+    image: elibrary.books.publicapi
+    ports:
+      - "8083:8080"
+    networks:
+      - elibrary_network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - BookService__BaseUrl=http://elibrary.books:8080
+    depends_on:
+      - elibrary.users
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest 
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Lorik.1234
+    ports:
+      - "1434:1433"
+    networks:
+      - elibrary_network
+    container_name: sqlserver-container
+
+networks:
+  elibrary_network:
+    driver: bridge

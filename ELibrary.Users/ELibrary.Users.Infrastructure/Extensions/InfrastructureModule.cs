@@ -18,6 +18,7 @@ namespace ELibrary.Users.Infrastructure.Extensions
             var connectionString = builder.Configuration.GetConnectionString("LocalConnection");
             var services = builder.Services;
 
+            Console.WriteLine($"-------------------> This is connection string:  {connectionString}");
             AddDependencyInjections(services);
             AddEntityFramework(services, connectionString);
 

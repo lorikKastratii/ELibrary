@@ -20,6 +20,10 @@ WORKDIR /app
 
 COPY --from=build /app/publish .
 
-EXPOSE 80
+ENV OrdersService__BaseUrl=http://localhost:8082/
+ENV UsersService__BaseUrl=http://localhost:8081/
+ENV ConnectionStrings__LocalConnection="Server=192.168.178.63, 1434;Database=ELibraryBooks;User Id=sa;Password=Lorik.1234;TrustServerCertificate=True;"
+
+EXPOSE 8080
 
 ENTRYPOINT ["dotnet", "ELibrary.Books.PublicAPI.dll"]

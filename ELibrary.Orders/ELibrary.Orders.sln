@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9055B272-945A-493A-8686-FD26D85438CE}"
+	ProjectSection(SolutionItems) = preProject
+		src\Dockerfile = src\Dockerfile
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ELibrary.Orders.Domain", "src\ELibrary.Orders.Domain\ELibrary.Orders.Domain.csproj", "{E4ABA5E1-739B-4E5B-BBD7-036B68D06DFC}"
 EndProject
@@ -13,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ELibrary.Orders.Infrastruct
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ELibrary.Orders.PublicApi", "src\ELibrary.Orders.PublicApi\ELibrary.Orders.PublicApi.csproj", "{9BF42D1D-F51F-4F11-99A6-BC40456DE5FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ELibrary.Orders.Tests", "ELibrary.Orders.Tests\ELibrary.Orders.Tests.csproj", "{36BCB3D9-E874-4A9E-B94D-36F7CA8EACF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ELibrary.Orders.Tests", "ELibrary.Orders.Tests\ELibrary.Orders.Tests.csproj", "{36BCB3D9-E874-4A9E-B94D-36F7CA8EACF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

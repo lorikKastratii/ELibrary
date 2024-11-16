@@ -27,7 +27,7 @@ namespace ELibrary.Orders.PublicApi.Controllers
             _validator = validator;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("GetOrders")]
         public async Task<IActionResult> GetOrders()
         {
@@ -38,7 +38,7 @@ namespace ELibrary.Orders.PublicApi.Controllers
                 return Ok(orders);
             }
 
-            return NotFound();
+            return Ok("There are no orders currently");
         }
 
         [HttpPost("CreateOrder")]

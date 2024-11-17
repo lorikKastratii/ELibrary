@@ -1,58 +1,44 @@
 ﻿using ELibrary.Orders.Application.Clients.Interfaces;
 using ELibrary.Orders.Domain.Entity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
+using System.Net.Http.Json;
 
 namespace ELibrary.Orders.Infrastructure.Clients
 {
     public class UserClient : IUserClient
     {
-        private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<UserClient> _logger;
-        private readonly string _baseUrl;
-        private readonly JsonSerializerOptions _options;
+        private readonly HttpClient _httpClient;
 
         public UserClient(
-            IHttpClientFactory httpClientFactory,
-            ILogger<UserClient> logger,
-            IConfiguration configuration)
+            ILogger<UserClient> logger, HttpClient httpClient)
         {
-            _httpClientFactory = httpClientFactory;
             _logger = logger;
-            _baseUrl = configuration["UserService:BaseUrl"] ?? "https://localhost:44316/";
-            _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            _httpClient = httpClient;
         }
 
         public async Task<User> GetUserByIdAsync(int id)
         {
-            var user = new User();
+            var url = $"{_httpClient.BaseAddress}api/user/getuserbyid/{id}";
 
             try
             {
-                var httpClient = _httpClientFactory.CreateClient();
+                var response = await _httpClient.GetAsync(url);
 
-                var url = $"{_baseUrl}api/user/getuserbyid/{id}";
-
-                var response = await httpClient.GetAsync(url);
-
-                if (response.IsSuccessStatusCode is false)
+                if (response.IsSuccessStatusCode)
                 {
-                    _logger.LogError("Error: {statusCode}", response.StatusCode);
-                    return null;
+                    var user = await response.Content.ReadFromJsonAsync<User>();
+                    return user;
                 }
 
-                var jsonResponse = await response.Content.ReadAsStringAsync();
-
-                user = JsonSerializer.Deserialize<User>(jsonResponse, _options);
-                return user;
+                _logger.LogError("Call to UserMS failed with Status Code: {statusCode}", response.StatusCode);                
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while deserializing User.");
+                _logger.LogError(ex, "Error while communicating with Users MS.");
             }
 
-            return user;
+            return null;
         }
     }
 }

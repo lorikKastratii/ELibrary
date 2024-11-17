@@ -9,6 +9,7 @@ using ELibrary.Orders.Infrastructure.Services;
 using ELibrary.Orders.PublicApi.Validators;
 using FluentValidation;
 using ELibrary.Orders.Application.Requests;
+using ELibrary.Orders.Infrastructure.Extensions;
 
 namespace ELibrary.Orders.PublicApi
 {
@@ -36,7 +37,7 @@ namespace ELibrary.Orders.PublicApi
 
             builder.Services
                 .AddDomainModule()
-                .AddInfrastuctureModule(builder.Configuration.GetConnectionString("LocalConnection"))
+                .AddInfrastructureModule(builder.Configuration)
                 .AddApplicationModule();
 
             // move this to extensions methods

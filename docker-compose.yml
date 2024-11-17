@@ -11,7 +11,6 @@ services:
       - elibrary_network
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - UserService__BaseUrl=http://localhost:8081
     depends_on:
       - sqlserver
 
@@ -26,6 +25,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - UserService__BaseUrl=http://elibrary.users:8080
+      - BookService__BaseUrl=http://elibrary.books:8080
+      - LOG_LEVEL=Error
     depends_on:
       - elibrary.users
 
@@ -39,7 +40,6 @@ services:
       - elibrary_network
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - BookService__BaseUrl=http://elibrary.books:8080
     depends_on:
       - elibrary.users
 

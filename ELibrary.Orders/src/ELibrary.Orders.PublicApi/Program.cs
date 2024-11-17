@@ -6,6 +6,10 @@ using Serilog;
 using ELibrary.Orders.Application.Clients.Interfaces;
 using ELibrary.Orders.Infrastructure.Clients;
 using ELibrary.Orders.Infrastructure.Services;
+using ELibrary.Orders.PublicApi.Validators;
+using FluentValidation;
+using ELibrary.Orders.Application.Requests;
+using ELibrary.Orders.Infrastructure.Extensions;
 
 namespace ELibrary.Orders.PublicApi
 {
@@ -17,7 +21,8 @@ namespace ELibrary.Orders.PublicApi
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services
+                .AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -28,9 +33,11 @@ namespace ELibrary.Orders.PublicApi
 
             builder.AddJwtAuthentication();
 
+            builder.Services.AddScoped<IValidator<CreateOrderRequest>, CreateOrderRequestValidator>();
+
             builder.Services
                 .AddDomainModule()
-                .AddInfrastuctureModule(builder.Configuration.GetConnectionString("LocalConnection"))
+                .AddInfrastructureModule(builder.Configuration)
                 .AddApplicationModule();
 
             // move this to extensions methods

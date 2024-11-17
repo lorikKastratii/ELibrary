@@ -1,4 +1,4 @@
-﻿using ELibrary.Orders.Application.Extensions.Errors;
+﻿using ELibrary.Orders.Application.Common.Errors;
 
 namespace ELibrary.Orders.Application.Extensions
 {

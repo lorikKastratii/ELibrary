@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using ELibrary.Orders.Application.Clients.Interfaces;
 using ELibrary.Orders.Application.Interfaces;
 using ELibrary.Orders.Application.Requests;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ELibrary.Orders.PublicApi.Controllers
@@ -15,18 +14,20 @@ namespace ELibrary.Orders.PublicApi.Controllers
         private readonly IOrderService _orderService;
         private readonly IMapper _mapper;
         private readonly ILogger<OrderController> _logger;
+        private readonly IValidator<CreateOrderRequest> _validator;
 
         public OrderController(
             IOrderService orderService,
             IMapper mapper,
-            ILogger<OrderController> logger)
+            ILogger<OrderController> logger, IValidator<CreateOrderRequest> validator)
         {
             _orderService = orderService;
             _mapper = mapper;
             _logger = logger;
+            _validator = validator;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("GetOrders")]
         public async Task<IActionResult> GetOrders()
         {
@@ -37,15 +38,17 @@ namespace ELibrary.Orders.PublicApi.Controllers
                 return Ok(orders);
             }
 
-            return NotFound();
+            return Ok("There are no orders currently");
         }
 
         [HttpPost("CreateOrder")]
-        public async Task<IActionResult> CreateOrderAsync(CreateOrderRequest request)
+        public async Task<IActionResult> CreateOrderAsync([FromBody] CreateOrderRequest request)
         {
-            if (request is null)
+            var validationResult = await _validator.ValidateAsync(request);
+
+            if (validationResult.IsValid is false)
             {
-                return BadRequest();
+                return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage));
             }
 
             var response = await _orderService.CreateOrderAsync(request);
@@ -55,7 +58,7 @@ namespace ELibrary.Orders.PublicApi.Controllers
                 return Ok(response.Error?.Message);
             }
 
-            return Ok(response.Data);
+            return Ok("Order Created successfully!");
         }
     }
 }

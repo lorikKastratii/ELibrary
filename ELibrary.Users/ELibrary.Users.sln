@@ -4,14 +4,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{361D61C1-6F92-41E0-BA2C-30E7E4671555}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ELibrary.Users.Domain", "ELibrary.Users.Domain\ELibrary.Users.Domain.csproj", "{47B6F320-CFB1-4F62-9E39-8539E578DDEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ELibrary.Users.Domain", "ELibrary.Users.Domain\ELibrary.Users.Domain.csproj", "{47B6F320-CFB1-4F62-9E39-8539E578DDEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ELibrary.Users.Application", "ELibrary.Users.Application\ELibrary.Users.Application.csproj", "{F268727C-859D-4760-83B1-E50D4FBD855F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ELibrary.Users.Application", "ELibrary.Users.Application\ELibrary.Users.Application.csproj", "{F268727C-859D-4760-83B1-E50D4FBD855F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ELibrary.Users.Infrastructure", "ELibrary.Users.Infrastructure\ELibrary.Users.Infrastructure.csproj", "{70D45699-E260-41F3-868C-54AC45EB1C49}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ELibrary.Users.Infrastructure", "ELibrary.Users.Infrastructure\ELibrary.Users.Infrastructure.csproj", "{70D45699-E260-41F3-868C-54AC45EB1C49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ELibrary.Users.PublicAPI", "ELibrary.Users.PublicAPI\ELibrary.Users.PublicAPI.csproj", "{424B8744-75DB-4A13-9B81-95D2DC3A1D05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ELibrary.Users.PublicAPI", "ELibrary.Users.PublicAPI\ELibrary.Users.PublicAPI.csproj", "{424B8744-75DB-4A13-9B81-95D2DC3A1D05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

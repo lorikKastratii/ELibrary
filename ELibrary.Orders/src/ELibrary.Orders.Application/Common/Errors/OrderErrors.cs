@@ -1,4 +1,4 @@
-﻿namespace ELibrary.Orders.Application.Extensions.Errors
+﻿namespace ELibrary.Orders.Application.Common.Errors
 {
     public static class OrderErrors
     {

@@ -1,5 +1,4 @@
 ﻿using ELibrary.Orders.Application.Clients.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ELibrary.Orders.PublicApi.Controllers
@@ -18,7 +17,7 @@ namespace ELibrary.Orders.PublicApi.Controllers
         [HttpGet("GetUser{id}")]
         public async Task<IActionResult> GetUserAsync(int id)
         {
-            var user = await _userService.GetUserById(id);
+            var user = await _userService.GetUserByIdAsync(id);
 
             if (user is null)
             {

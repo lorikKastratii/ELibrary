@@ -1,4 +1,4 @@
-﻿namespace Elibrary.Books.Domain.Entity
+﻿namespace ELibrary.Books.Domain.Entity
 {
     public class Book : BaseEntity
     {

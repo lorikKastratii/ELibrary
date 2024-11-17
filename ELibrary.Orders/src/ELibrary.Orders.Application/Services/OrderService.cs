@@ -2,7 +2,7 @@
 using ELibrary.Orders.Application.Clients.Interfaces;
 using ELibrary.Orders.Application.Dtos;
 using ELibrary.Orders.Application.Extensions;
-using ELibrary.Orders.Application.Extensions.Errors;
+using ELibrary.Orders.Application.Common.Errors;
 using ELibrary.Orders.Application.Interfaces;
 using ELibrary.Orders.Application.Requests;
 using ELibrary.Orders.Domain.Entity;
@@ -35,7 +35,7 @@ namespace ELibrary.Orders.Application.Services
 
         public async Task<ServiceResponse<OrderResultDto>> CreateOrderAsync(CreateOrderRequest request)
         {
-            var user = await _userClient.GetUserById(request.UserId);
+            var user = await _userClient.GetUserByIdAsync(request.UserId);
 
             if (user is null)
             {
@@ -59,7 +59,7 @@ namespace ELibrary.Orders.Application.Services
             if (result is not null)
             {
                 result.OutOfStockItems = outOfStockItems;
-                //map and return success case
+                return ServiceResponse<OrderResultDto>.Success(result);
             }
 
             //TODO: Update Stock

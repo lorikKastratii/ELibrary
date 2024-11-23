@@ -12,5 +12,7 @@ namespace ELibrary.Books.Application.Interfaces
         Task<ServiceResponse<BookDto>> GetBookByIdAsync(int id, CancellationToken cancellationToken);
         Task<ServiceResponse<List<BookDto>>> GetBooksByCategoryAsync(int categoryId, CancellationToken cancellationToken);
         Task<ServiceResponse<List<BookDto>>> GetBooksByAuthorAsync(int authorId, CancellationToken cancellationToken);
+        Task<IEnumerable<Book>> SearchBooksAsync(string query);
+        Task PopulateElasticWithBooksAsync(CancellationToken cancellationToken);
     }
 }

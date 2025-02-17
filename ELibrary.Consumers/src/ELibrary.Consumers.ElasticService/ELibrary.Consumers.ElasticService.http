@@ -1,0 +1,6 @@
+@ELibrary.Consumers.ElasticService_HostAddress = http://localhost:5193
+
+GET {{ELibrary.Consumers.ElasticService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

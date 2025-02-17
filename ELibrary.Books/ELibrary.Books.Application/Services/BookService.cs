@@ -7,7 +7,9 @@ using ELibrary.Books.Application.Extensions.Errors;
 using ELibrary.Books.Application.Interfaces;
 using ELibrary.Books.Domain.Exceptions.Book;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
+using Nest;
+using MassTransit;
+using ELibrary.Books.Application.Events;
 
 namespace ELibrary.Books.Application.Services
 {
@@ -17,13 +19,18 @@ namespace ELibrary.Books.Application.Services
         private readonly IAuthorRepository _authorRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<BookService> _logger;
+        private readonly IElasticSearchService _elasticSearchService;
+        private readonly IBus _bus;
 
-        public BookService(IBookRepository bookRepository, IMapper mapper, ILogger<BookService> logger, IAuthorRepository authorRepository)
+        public BookService(IBookRepository bookRepository, IMapper mapper, ILogger<BookService> logger,
+            IAuthorRepository authorRepository, IElasticSearchService elasticSearchService, IBus bus)
         {
             _bookRepository = bookRepository;
             _mapper = mapper;
             _logger = logger;
             _authorRepository = authorRepository;
+            _elasticSearchService = elasticSearchService;
+            _bus = bus;
         }
 
         public async Task<ServiceResponse<List<BookDto>>> GetBooksAsync(CancellationToken cancellationToken)
@@ -63,6 +70,8 @@ namespace ELibrary.Books.Application.Services
             {
                 return new ServiceResponse<BookDto>(BookErrors.BOOK_CREATION_ERROR);
             }
+
+            await _bus.Publish(new BookCreated { Id = book.Id});
 
             return new ServiceResponse<BookDto>(bookDto);
         }
@@ -106,18 +115,7 @@ namespace ELibrary.Books.Application.Services
             {
                 _logger.LogInformation($"Book with Id: {id} does not exists", id);
                 return ServiceResponse<BookDto>.Failure(BookErrors.BOOK_NOT_FOUND);
-            }
-            
-        }
-
-        public async Task<Author[]> DoSomethingAsync(int id1)
-        {
-            var author1Task = _authorRepository.GetAuthorByIdAsync(id1);
-            var author1SecondTask = _authorRepository.GetAuthorByIdAsync(id1);
-
-            var authors = await Task.WhenAll(author1Task, author1SecondTask);
-
-            return authors;
+            }         
         }
 
         public async Task<ServiceResponse<List<BookDto>>> GetBooksByCategoryAsync(int categoryId, CancellationToken cancellationToken)
@@ -159,6 +157,22 @@ namespace ELibrary.Books.Application.Services
             var bookList = _mapper.Map<List<BookDto>>(books);
 
             return new ServiceResponse<List<BookDto>>(bookList);
+        }
+
+        public async Task<IEnumerable<Book>> SearchBooksAsync(string query)
+        {
+            var response = await _elasticSearchService.SearchAsync<Book>("books", query);
+            return response;
+        }
+
+        public async Task PopulateElasticWithBooksAsync(CancellationToken cancellationToken = default)
+        {
+            var books = await _bookRepository.GetBooksAsync(cancellationToken);
+
+            foreach (var book in books)
+            {
+                await _elasticSearchService.IndexAsync(book, "books");
+            }
         }
     }
 }

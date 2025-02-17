@@ -2,7 +2,9 @@
 using ELibrary.Books.Application.Dtos.Book;
 using ELibrary.Books.Application.Interfaces;
 using ELibrary.Books.Application.Requests.Book;
+using ELibrary.Books.Domain.Entity;
 using Microsoft.AspNetCore.Mvc;
+using Nest;
 
 namespace ELibrary.Books.PublicAPI.Controllers
 {
@@ -13,12 +15,14 @@ namespace ELibrary.Books.PublicAPI.Controllers
         private readonly IBookService _bookService;
         private readonly IMapper _mapper;
         private readonly ILogger<BookController> _logger;
+        private readonly IElasticClient _elasticClient;
 
-        public BookController(IBookService bookService, IMapper mapper, ILogger<BookController> logger)
+        public BookController(IBookService bookService, IMapper mapper, ILogger<BookController> logger, IElasticClient elasticClient)
         {
             _bookService = bookService;
             _mapper = mapper;
             _logger = logger;
+            _elasticClient = elasticClient;
         }
 
         [HttpGet("GetBooks")]
@@ -104,5 +108,25 @@ namespace ELibrary.Books.PublicAPI.Controllers
             return NotFound("No book exists in this category");
         }
 
+        [HttpPost("populate-elastic")]
+        public async Task<IActionResult> PopulateElasticsearch(CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                await _bookService.PopulateElasticWithBooksAsync(cancellationToken);
+                return Ok("Elasticsearch has been populated with books.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error populating Elasticsearch: {ex.Message}");
+            }
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchBooks([FromQuery] string query)
+        {
+            var books = await _bookService.SearchBooksAsync(query);
+            return Ok(books);
+        }
     }
 }

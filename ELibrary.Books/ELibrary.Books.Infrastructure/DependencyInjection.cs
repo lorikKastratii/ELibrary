@@ -1,4 +1,6 @@
-﻿using ELibrary.Books.Domain.Interfaces;
+﻿using ELibrary.Books.Application.Interfaces;
+using ELibrary.Books.Domain.Interfaces;
+using ELibrary.Books.Infrastructure.Clients;
 using ELibrary.Books.Infrastructure.Data;
 using ELibrary.Books.Infrastructure.Repositories;
 using MassTransit;
@@ -29,6 +31,7 @@ namespace ELibrary.Books.Infrastructure
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IAuthorRepository, AuthorRepository>();
+            services.AddScoped<IElasticSearchService, ElasticSearchService>();
 
             var connectionString = configuration.GetConnectionString("LocalConnection");
 

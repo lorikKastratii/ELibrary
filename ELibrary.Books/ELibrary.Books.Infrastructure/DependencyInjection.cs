@@ -3,10 +3,12 @@ using ELibrary.Books.Domain.Interfaces;
 using ELibrary.Books.Infrastructure.Clients;
 using ELibrary.Books.Infrastructure.Data;
 using ELibrary.Books.Infrastructure.Repositories;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nest;
+using RabbitMQ.Client;
 
 namespace ELibrary.Books.Infrastructure
 {
@@ -16,10 +18,11 @@ namespace ELibrary.Books.Infrastructure
         {
             services.AddSingleton<IElasticClient>(sp =>
             {
-                var settings = new ConnectionSettings(new Uri("http://localhost:9200"))
+                //var settings = new ConnectionSettings(new Uri("http://localhost:9200"))
+                var settings = new ConnectionSettings(new Uri("http://elasticsearch:9200"))
                     .DefaultIndex("books")
-                    .BasicAuthentication("elastic", "12345");
-                    //.ServerCertificateValidationCallback((sender, certificate, chain, errors) => true);
+                    //.BasicAuthentication("elastic", "12345")
+                    .ServerCertificateValidationCallback((sender, certificate, chain, errors) => true);
 
                 return new ElasticClient(settings);
             });
@@ -31,10 +34,30 @@ namespace ELibrary.Books.Infrastructure
             services.AddScoped<IElasticSearchService, ElasticSearchService>();
 
             var connectionString = configuration.GetConnectionString("LocalConnection");
-            //var connectionString = "Server=LORIK\\SQLEXPRESS;Database=ELibraryBooks;Trusted_Connection=True;TrustServerCertificate=True;";
 
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
+            return services;
+        }
+
+        public static IServiceCollection AddMassTransitWithRabbitMq(this IServiceCollection services, IConfiguration configuration, Action<IBusRegistrationConfigurator>? configureConsumers = null)
+        {
+            services.AddMassTransit(x =>
+            {
+                // If the caller wants to add consumers, run the configuration callback.
+                configureConsumers?.Invoke(x);
+
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    // Use the configuration value "RabbitMQ:Host" if provided, otherwise default to "rabbitmq".
+                    var rabbitMqHost = configuration["RabbitMQ:Host"] ?? "rabbitmq";
+                    cfg.Host(rabbitMqHost, "/", h =>
+                    {
+                        h.Username("guest");
+                        h.Password("guest");
+                    });
+                });
+            });
             return services;
         }
     }

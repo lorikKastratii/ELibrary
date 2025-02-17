@@ -26,7 +26,8 @@ namespace ELibrary.Books.PublicAPI
             builder.Services
                 .AddDomainModule()
                 .AddApplicationModule()
-                .AddInfrastructureModule(builder.Configuration);
+                .AddInfrastructureModule(builder.Configuration)
+                .AddMassTransitWithRabbitMq(builder.Configuration); //TODO: Move it into separate class
 
             var app = builder.Build();
 

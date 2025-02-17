@@ -11,7 +11,6 @@ RUN dotnet restore "ELibrary.Orders.Infrastructure/ELibrary.Orders.Infrastructur
 
 COPY . .
 
-# Publish the application
 RUN dotnet publish "ELibrary.Orders.PublicApi/ELibrary.Orders.PublicApi.csproj" -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime

@@ -40,8 +40,25 @@ services:
       - elibrary_network
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ElasticSearch__Url=http://elasticsearch:9200
     depends_on:
       - elibrary.users
+      - elasticsearch
+  
+  elibrary.consumers:
+    build:
+      context: ./ELibrary.Consumers/src
+    image: elibrary.consumers
+    ports:
+      - "8084:80"
+    networks:
+      - elibrary_network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      # Optionally, set RabbitMQ host here if needed:
+      # - RabbitMQ__Host=rabbitmq
+    depends_on:
+      - rabbitmq
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2019-latest 
@@ -54,6 +71,37 @@ services:
       - elibrary_network
     container_name: sqlserver-container
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=12345
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - elibrary_network
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
+  rabbitmq:
+    image: rabbitmq:3.10-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - elibrary_network
+
 networks:
   elibrary_network:
     driver: bridge
+
+volumes:
+  es_data:

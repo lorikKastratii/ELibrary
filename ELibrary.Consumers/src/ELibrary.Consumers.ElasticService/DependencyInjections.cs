@@ -19,7 +19,13 @@ namespace ELibrary.Consumers.ElasticService
                         h.Password("guest");
                     });
                     // This automatically creates the receive endpoint for the consumer
-                    cfg.ConfigureEndpoints(context);
+                    //cfg.ConfigureEndpoints(context);
+
+                    cfg.ReceiveEndpoint("book-created-queue", e =>
+                    {
+                        e.ConfigureConsumer<BookCreatedConsumer>(context);
+                        e.Bind("BookCreated");  // <-- Make sure it binds to the correct exchange
+                    });
                 });
             });
             return builder;

@@ -1,4 +1,4 @@
-﻿using ELibrary.Consumers.ElasticService.Events;
+﻿using ELibrary.Contracts.Events;
 using MassTransit;
 
 namespace ELibrary.Consumers.ElasticService.Services
@@ -14,7 +14,6 @@ namespace ELibrary.Consumers.ElasticService.Services
         public Task Consume(ConsumeContext<BookCreated> context)
         {
             _logger.LogInformation("Received BookCreated event with BookId: {BookId}", context.Message.Id);
-            // You can add additional logic here (e.g., updating a database, calling another service, etc.)
             return Task.CompletedTask;
         }
     }

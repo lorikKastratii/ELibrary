@@ -3,7 +3,8 @@ version: '3.8'
 services:
   elibrary.users:
     build:
-      context: ./ELibrary.Users
+      context: .
+      dockerfile: ELibrary.Users/Dockerfile
     image: elibrary.users.publicapi
     ports:
       - "8081:8080"
@@ -16,7 +17,8 @@ services:
 
   elibrary.orders:
     build:
-      context: ./ELibrary.Orders/src
+      context: .
+      dockerfile: ELibrary.Orders/src/Dockerfile
     image: elibrary.orders.publicapi
     ports:
       - "8082:8080"
@@ -32,7 +34,8 @@ services:
 
   elibrary.books:
     build:
-      context: ./ELibrary.Books
+      context: .
+      dockerfile: ELibrary.Books/Dockerfile
     image: elibrary.books.publicapi
     ports:
       - "8083:8080"
@@ -47,7 +50,8 @@ services:
   
   elibrary.consumers:
     build:
-      context: ./ELibrary.Consumers/src
+      context: .
+      dockerfile: ELibrary.Consumers/src/Dockerfile
     image: elibrary.consumers
     ports:
       - "8084:80"

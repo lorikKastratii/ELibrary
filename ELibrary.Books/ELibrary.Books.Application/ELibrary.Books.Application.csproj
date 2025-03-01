@@ -18,7 +18,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\ELibrary.Shared\src\ELibrary.Contracts\ELibrary.Contracts.csproj" />
     <ProjectReference Include="..\ELibrary.Books.Domain\ELibrary.Books.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Events\" />
   </ItemGroup>
 
 </Project>

@@ -50,7 +50,7 @@ namespace ELibrary.Books.PublicAPI.Controllers
 
             var response = await _bookService.CreateBookAsync(bookDto, cancellationToken);
 
-            if (response.IsSuccess)
+            if (response.IsSuccess is false)
             {
                 _logger.LogWarning("Failed to create book with title: {title}", request.Title);
 

@@ -15,4 +15,12 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Events\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\ELibrary.Shared\src\ELibrary.Contracts\ELibrary.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>

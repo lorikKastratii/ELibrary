@@ -7,9 +7,8 @@ using ELibrary.Books.Application.Extensions.Errors;
 using ELibrary.Books.Application.Interfaces;
 using ELibrary.Books.Domain.Exceptions.Book;
 using Microsoft.Extensions.Logging;
-using Nest;
 using MassTransit;
-using ELibrary.Books.Application.Events;
+using ELibrary.Contracts.Events;
 
 namespace ELibrary.Books.Application.Services
 {
@@ -71,7 +70,16 @@ namespace ELibrary.Books.Application.Services
                 return new ServiceResponse<BookDto>(BookErrors.BOOK_CREATION_ERROR);
             }
 
-            await _bus.Publish(new BookCreated { Id = book.Id});
+            try
+            {
+                await _bus.Publish(new BookCreated { Id = book.Id }, cancellationToken);
+                _logger.LogInformation("BookCreated event published for Book Id: {BookId}", book.Id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to publish BookCreated event for Book Id: {BookId}", book.Id);
+                return new ServiceResponse<BookDto>(BookErrors.BOOK_CREATION_ERROR);
+            }
 
             return new ServiceResponse<BookDto>(bookDto);
         }
@@ -111,11 +119,11 @@ namespace ELibrary.Books.Application.Services
 
                 return ServiceResponse<BookDto>.Success(bookDto);
             }
-            catch(BookNotFoundException ex)
+            catch (BookNotFoundException ex)
             {
                 _logger.LogInformation($"Book with Id: {id} does not exists", id);
                 return ServiceResponse<BookDto>.Failure(BookErrors.BOOK_NOT_FOUND);
-            }         
+            }
         }
 
         public async Task<ServiceResponse<List<BookDto>>> GetBooksByCategoryAsync(int categoryId, CancellationToken cancellationToken)

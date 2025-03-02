@@ -28,7 +28,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - UserService__BaseUrl=http://elibrary.users:8080
       - BookService__BaseUrl=http://elibrary.books:8080
-      - LOG_LEVEL=Error
+      - LOG_LEVEL=Information
     depends_on:
       - elibrary.users
 
@@ -48,21 +48,35 @@ services:
       - elibrary.users
       - elasticsearch
   
-  elibrary.consumers:
+  elibrary.consumers.elasticservice:
     build:
       context: .
-      dockerfile: ELibrary.Consumers/src/Dockerfile
-    image: elibrary.consumers
+      dockerfile: ELibrary.Consumers/src/Dockerfile_ElasticService
+    image: elibrary.consumers.elasticservice
     ports:
       - "8084:80"
     networks:
       - elibrary_network
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      # Optionally, set RabbitMQ host here if needed:
-      # - RabbitMQ__Host=rabbitmq
+      - BookService__BaseUrl=http://elibrary.books:8080
     depends_on:
       - rabbitmq
+
+  elibrary.consumers.book:
+    build:
+      context: .
+      dockerfile: ELibrary.Consumers/src/Dockerfile_Book
+    image: elibrary.consumers.book
+    ports:
+      - "8085:80"
+    networks:
+      - elibrary_network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - BookService__BaseUrl=http://elibrary.books:8080
+    depends_on:
+      - rabbitmq  
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2019-latest 
@@ -74,6 +88,8 @@ services:
     networks:
       - elibrary_network
     container_name: sqlserver-container
+    volumes:
+      - sqlserver_data:/var/opt/mssql
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
@@ -109,3 +125,4 @@ networks:
 
 volumes:
   es_data:
+  sqlserver_data:

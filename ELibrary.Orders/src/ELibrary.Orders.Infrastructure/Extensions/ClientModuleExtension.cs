@@ -19,7 +19,7 @@ namespace ELibrary.Orders.Infrastructure.Extensions
         {
             services.AddHttpClient<IBookClient, BookClient>(client =>
             {
-                var uri = configuration["BookService:BaseUrl"] ?? "http://localhost:8080";
+                var uri = configuration["BookService:BaseUrl"] ?? "http://localhost:8083";
                 client.BaseAddress = new Uri(uri);
             });
 

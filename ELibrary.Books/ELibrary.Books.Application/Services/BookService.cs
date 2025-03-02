@@ -72,6 +72,7 @@ namespace ELibrary.Books.Application.Services
 
             try
             {
+                //await _elasticSearchService.IndexAsync(book, "books");
                 await _bus.Publish(new BookCreated { Id = book.Id }, cancellationToken);
                 _logger.LogInformation("BookCreated event published for Book Id: {BookId}", book.Id);
             }

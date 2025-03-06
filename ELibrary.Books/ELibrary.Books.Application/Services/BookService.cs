@@ -6,9 +6,10 @@ using ELibrary.Books.Application.Extensions;
 using ELibrary.Books.Application.Extensions.Errors;
 using ELibrary.Books.Application.Interfaces;
 using ELibrary.Books.Domain.Exceptions.Book;
-using Microsoft.Extensions.Logging;
+//using Microsoft.Extensions.Logging;
 using MassTransit;
 using ELibrary.Contracts.Events;
+using Microsoft.Extensions.Logging;
 
 namespace ELibrary.Books.Application.Services
 {

@@ -24,6 +24,8 @@ COPY --from=build /app/publish .
 
 ENV OrdersService__BaseUrl=http://localhost:8082/
 ENV UsersService__BaseUrl=http://localhost:8081/
+ENV ElasticClientSettings__ElasticUser=elastic
+ENV ElasticClientSettings__ElasticPassword=43nNvZsBHprD0IIJIKyY
 ENV ConnectionStrings__LocalConnection="Server=192.168.178.63, 1434;Database=ELibraryBooks;User Id=sa;Password=Lorik.1234;TrustServerCertificate=True;"
 
 EXPOSE 8080

@@ -47,6 +47,7 @@ namespace ELibrary.Books.PublicAPI
                 .AddMassTransitWithRabbitMq(builder.Configuration);
 
             builder.AddElasticClient();
+            builder.AddOpenTelemetry();
 
             var app = builder.Build();
 
@@ -62,7 +63,7 @@ namespace ELibrary.Books.PublicAPI
             app.UseAuthorization();
 
             //app.UseSerilogRequestLogging();
-
+            app.UseOpenTelemetryPrometheusScrapingEndpoint();
             app.MapControllers();
 
             app.Run();

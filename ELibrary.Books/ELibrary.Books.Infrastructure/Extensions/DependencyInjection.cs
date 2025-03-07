@@ -10,23 +10,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Nest;
 using RabbitMQ.Client;
 
-namespace ELibrary.Books.Infrastructure
+namespace ELibrary.Books.Infrastructure.Extensions
 {
     public static class DependencyInjection
     {
         public static IServiceCollection AddInfrastructureModule(this IServiceCollection services, ConfigurationManager configuration)
         {
-            services.AddSingleton<IElasticClient>(sp =>
-            {
-                //var settings = new ConnectionSettings(new Uri("http://localhost:9200"))
-                var settings = new ConnectionSettings(new Uri("http://elasticsearch:9200"))
-                    .DefaultIndex("books")
-                    //.BasicAuthentication("elastic", "12345")
-                    .ServerCertificateValidationCallback((sender, certificate, chain, errors) => true);
-
-                return new ElasticClient(settings);
-            });
-
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();

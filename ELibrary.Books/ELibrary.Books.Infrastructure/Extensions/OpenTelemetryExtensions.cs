@@ -28,10 +28,14 @@ namespace ELibrary.Books.Infrastructure.Extensions
                     metricsProviderBuilder
                         .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("ELibrary"))
                         .AddAspNetCoreInstrumentation()
-                        .AddOtlpExporter(opt =>
-                        {
-                            opt.Endpoint = new Uri("http://otel-collector:4317");
-                        });
+                        .AddHttpClientInstrumentation()
+                        .AddRuntimeInstrumentation()
+                        .AddProcessInstrumentation()
+                        .AddPrometheusExporter();
+                        //.AddOtlpExporter(opt =>
+                        //{
+                        //    opt.Endpoint = new Uri("http://otel-collector:4317");
+                        //});
                 });
 
             return builder;

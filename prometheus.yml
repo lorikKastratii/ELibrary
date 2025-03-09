@@ -12,4 +12,4 @@ global:
 scrape_configs:
   - job_name: 'elibrary.books'
     static_configs:
-      - targets: ['elibrary.books:8083']  # ✅ Scrape directly from BooksMS
+      - targets: ['elibrary.books:8083']

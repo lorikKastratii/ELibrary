@@ -38,6 +38,10 @@ namespace ELibrary.Books.PublicAPI
                     .AddRuntimeInstrumentation()
                     .AddProcessInstrumentation()
                     .AddPrometheusExporter();
+                    //.AddOtlpExporter(opt =>
+                    //{
+                    //    opt.Endpoint = new Uri("http://otel-collector:4317");
+                    //});
             });
 
             // Add services to the container.

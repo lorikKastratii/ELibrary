@@ -27,7 +27,7 @@ namespace ELibrary.Orders.PublicApi.Controllers
             _validator = validator;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("GetOrders")]
         public async Task<IActionResult> GetOrders()
         {

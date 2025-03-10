@@ -23,10 +23,10 @@ namespace ELibrary.Consumers.Book.Services
             var bookId = context.Message.Id;
             _logger.LogInformation("Received BookCreated event on ElasticService Consumer with BookId: {BookId}", bookId);
 
-            var book = await _bookClient.GetBookAsync(bookId);
 
             try
             {
+                var book = await _bookClient.GetBookAsync(bookId);
                 var response = await _elasticSearchService.IndexAsync(book, "books");
 
                 if (response is false)

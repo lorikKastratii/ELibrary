@@ -2,6 +2,9 @@ using ELibrary.Books.Domain;
 using ELibrary.Books.Application;
 using Serilog;
 using ELibrary.Books.Infrastructure.Extensions;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace ELibrary.Books.PublicAPI
 {
@@ -10,6 +13,36 @@ namespace ELibrary.Books.PublicAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddOpenTelemetry()
+            .WithTracing(tracerProviderBuilder =>
+            {
+                tracerProviderBuilder
+                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("ELibrary.Books"))
+                    .AddAspNetCoreInstrumentation()
+                    .AddConsoleExporter()
+                    .AddHttpClientInstrumentation()
+                    .AddSqlClientInstrumentation()
+                    .AddOtlpExporter(opt =>
+                    {
+                        opt.Endpoint = new Uri("http://otel-collector:4317");
+                    });
+            })
+            .WithMetrics(metricsProviderBuilder =>
+            {
+                metricsProviderBuilder
+                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("ELibrary.Books"))
+                    .AddAspNetCoreInstrumentation()
+                    .AddConsoleExporter()
+                    .AddHttpClientInstrumentation()
+                    .AddRuntimeInstrumentation()
+                    .AddProcessInstrumentation()
+                    .AddPrometheusExporter();
+                    //.AddOtlpExporter(opt =>
+                    //{
+                    //    opt.Endpoint = new Uri("http://otel-collector:4317");
+                    //});
+            });
 
             // Add services to the container.
 
@@ -47,9 +80,12 @@ namespace ELibrary.Books.PublicAPI
                 .AddMassTransitWithRabbitMq(builder.Configuration);
 
             builder.AddElasticClient();
+            //builder.AddOpenTelemetry();
+            builder.WebHost.UseUrls("http://+:8083");
 
             var app = builder.Build();
 
+            app.UseOpenTelemetryPrometheusScrapingEndpoint();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

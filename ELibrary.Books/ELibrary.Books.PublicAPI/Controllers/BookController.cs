@@ -5,6 +5,7 @@ using ELibrary.Books.Application.Requests.Book;
 using ELibrary.Books.Domain.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Nest;
+using System;
 
 namespace ELibrary.Books.PublicAPI.Controllers
 {
@@ -16,6 +17,7 @@ namespace ELibrary.Books.PublicAPI.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger<BookController> _logger;
         private readonly IElasticClient _elasticClient;
+        private HttpClient _httpClient;
 
         public BookController(IBookService bookService, IMapper mapper, ILogger<BookController> logger, IElasticClient elasticClient)
         {
@@ -50,7 +52,7 @@ namespace ELibrary.Books.PublicAPI.Controllers
 
             var response = await _bookService.CreateBookAsync(bookDto, cancellationToken);
 
-            if (response.IsSuccess)
+            if (response.IsSuccess is false)
             {
                 _logger.LogWarning("Failed to create book with title: {title}", request.Title);
 
@@ -127,6 +129,25 @@ namespace ELibrary.Books.PublicAPI.Controllers
         {
             var books = await _bookService.SearchBooksAsync(query);
             return Ok(books);
+        }
+        
+        [HttpGet("TestConnection")]
+        public async Task<IActionResult> TestConnection()
+        {
+            try
+            {
+                _httpClient = new HttpClient();
+                _httpClient.BaseAddress = new Uri("http://192.168.178.63:8081/");
+
+                var url = $"{_httpClient.BaseAddress}api/book/getbookbyid/{1}";
+                var response = await _httpClient.GetAsync(url);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError($"Failed to get user with error: {ex}", ex.Message);
+                return BadRequest();
+            }
+            return Ok("Connection successful.");
         }
     }
 }

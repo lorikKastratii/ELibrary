@@ -8,7 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{965798D8-0DF
 		Dockerfile = Dockerfile
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ELibrary.Books.Domain", "Elibrary.Books.Domain\ELibrary.Books.Domain.csproj", "{688B3411-1835-4D37-A141-7A0A67C9858C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ELibrary.Books.Domain", "ELibrary.Books.Domain\ELibrary.Books.Domain.csproj", "{688B3411-1835-4D37-A141-7A0A67C9858C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ELibrary.Books.Application", "ELibrary.Books.Application\ELibrary.Books.Application.csproj", "{CC2F7AC0-380C-4319-B016-86028EA2A39E}"
 EndProject
@@ -17,6 +17,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ELibrary.Books.PublicAPI", "ELibrary.Books.PublicAPI\ELibrary.Books.PublicAPI.csproj", "{17FAE287-5045-416D-ABDA-7995C89F3901}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ELibrary.Books.Contracts", "ELibrary.Books.Contracts\ELibrary.Books.Contracts.csproj", "{3836D4BB-08AA-43DF-94E8-A71CB053409F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ELibrary.Contracts", "..\ELibrary.Shared\src\ELibrary.Contracts\ELibrary.Contracts.csproj", "{5C8C5F97-6F5A-449E-897A-1887978BF216}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,6 +46,10 @@ Global
 		{3836D4BB-08AA-43DF-94E8-A71CB053409F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3836D4BB-08AA-43DF-94E8-A71CB053409F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3836D4BB-08AA-43DF-94E8-A71CB053409F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C8C5F97-6F5A-449E-897A-1887978BF216}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C8C5F97-6F5A-449E-897A-1887978BF216}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C8C5F97-6F5A-449E-897A-1887978BF216}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C8C5F97-6F5A-449E-897A-1887978BF216}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

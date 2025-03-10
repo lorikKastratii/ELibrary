@@ -2,16 +2,16 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 WORKDIR /src
 
-COPY ["ELibrary.Orders.PublicApi/ELibrary.Orders.PublicApi.csproj", "ELibrary.Orders.PublicApi/"]
-COPY ["ELibrary.Orders.Application/ELibrary.Orders.Application.csproj", "ELibrary.Orders.Application/"]
-COPY ["ELibrary.Orders.Domain/ELibrary.Orders.Domain.csproj", "ELibrary.Orders.Domain/"]
-COPY ["ELibrary.Orders.Infrastructure/ELibrary.Orders.Infrastructure.csproj", "ELibrary.Orders.Infrastructure/"]
+COPY ["ELibrary.Orders/src/ELibrary.Orders.PublicApi/ELibrary.Orders.PublicApi.csproj", "ELibrary.Orders/src/ELibrary.Orders.PublicApi/"]
+COPY ["ELibrary.Orders/src/ELibrary.Orders.Application/ELibrary.Orders.Application.csproj", "ELibrary.Orders/src/ELibrary.Orders.Application/"]
+COPY ["ELibrary.Orders/src/ELibrary.Orders.Domain/ELibrary.Orders.Domain.csproj", "ELibrary.Orders/src/ELibrary.Orders.Domain/"]
+COPY ["ELibrary.Orders/src/ELibrary.Orders.Infrastructure/ELibrary.Orders.Infrastructure.csproj", "ELibrary.Orders/src/ELibrary.Orders.Infrastructure/"]
 
-RUN dotnet restore "ELibrary.Orders.Infrastructure/ELibrary.Orders.Infrastructure.csproj"
+RUN dotnet restore "ELibrary.Orders/src/ELibrary.Orders.Infrastructure/ELibrary.Orders.Infrastructure.csproj"
 
 COPY . .
 
-RUN dotnet publish "ELibrary.Orders.PublicApi/ELibrary.Orders.PublicApi.csproj" -c Release -o /app/publish
+RUN dotnet publish "ELibrary.Orders/src/ELibrary.Orders.PublicApi/ELibrary.Orders.PublicApi.csproj" -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 

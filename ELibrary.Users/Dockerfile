@@ -2,16 +2,16 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 WORKDIR /src
 
-COPY ["ELibrary.Users.PublicAPI/ELibrary.Users.PublicAPI.csproj", "ELibrary.Users.PublicAPI/"]
-COPY ["ELibrary.Users.Application/ELibrary.Users.Application.csproj", "ELibrary.Users.Application/"]
-COPY ["ELibrary.Users.Domain/ELibrary.Users.Domain.csproj", "ELibrary.Users.Domain/"]
-COPY ["ELibrary.Users.Infrastructure/ELibrary.Users.Infrastructure.csproj", "ELibrary.Users.Infrastructure/"]
+COPY ["ELibrary.Users/ELibrary.Users.PublicAPI/ELibrary.Users.PublicAPI.csproj", "ELibrary.Users/ELibrary.Users.PublicAPI/"]
+COPY ["ELibrary.Users/ELibrary.Users.Application/ELibrary.Users.Application.csproj", "ELibrary.Users/ELibrary.Users.Application/"]
+COPY ["ELibrary.Users/ELibrary.Users.Domain/ELibrary.Users.Domain.csproj", "ELibrary.Users/ELibrary.Users.Domain/"]
+COPY ["ELibrary.Users/ELibrary.Users.Infrastructure/ELibrary.Users.Infrastructure.csproj", "ELibrary.Users/ELibrary.Users.Infrastructure/"]
 
-RUN dotnet restore "ELibrary.Users.PublicAPI/ELibrary.Users.PublicAPI.csproj"
+RUN dotnet restore "ELibrary.Users/ELibrary.Users.PublicAPI/ELibrary.Users.PublicAPI.csproj"
 
 COPY . .
 
-RUN dotnet publish "ELibrary.Users.PublicAPI/ELibrary.Users.PublicAPI.csproj" -c Release -o /app/publish
+RUN dotnet publish "ELibrary.Users/ELibrary.Users.PublicAPI/ELibrary.Users.PublicAPI.csproj" -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 

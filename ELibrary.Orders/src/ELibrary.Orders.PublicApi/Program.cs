@@ -1,10 +1,7 @@
-using ELibrary.Orders.Infrastructure;
 using ELibrary.Orders.Application;
 using ELibrary.Orders.PublicApi.Extensions;
 using ELibrary.Orders.Domain;
 using Serilog;
-using ELibrary.Orders.Application.Clients.Interfaces;
-using ELibrary.Orders.Infrastructure.Clients;
 using ELibrary.Orders.Infrastructure.Services;
 using ELibrary.Orders.PublicApi.Validators;
 using FluentValidation;
@@ -42,11 +39,11 @@ namespace ELibrary.Orders.PublicApi
 
             // move this to extensions methods
             builder.Services.AddHttpClient();
-            builder.Services.AddHttpClient<IBookClient, BookClient>(client =>
-            {
-                var uri = builder.Configuration["BookService:BaseUrl"];
-                client.BaseAddress = new Uri(uri);
-            });
+            //builder.Services.AddHttpClient<IBookClient, BookClient>(client =>
+            //{
+            //    var uri = builder.Configuration["BookService:BaseUrl"];
+            //    client.BaseAddress = new Uri(uri);
+            //});
 
             builder.Services.AddSingleton<RabbitMQClientService>();
 

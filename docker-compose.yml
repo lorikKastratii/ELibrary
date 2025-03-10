@@ -1,9 +1,8 @@
-version: '3.8'
-
 services:
   elibrary.users:
     build:
-      context: ./ELibrary.Users
+      context: .
+      dockerfile: ELibrary.Users/Dockerfile
     image: elibrary.users.publicapi
     ports:
       - "8081:8080"
@@ -16,7 +15,8 @@ services:
 
   elibrary.orders:
     build:
-      context: ./ELibrary.Orders/src
+      context: .
+      dockerfile: ELibrary.Orders/src/Dockerfile
     image: elibrary.orders.publicapi
     ports:
       - "8082:8080"
@@ -25,40 +25,69 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - UserService__BaseUrl=http://elibrary.users:8080
-      - BookService__BaseUrl=http://elibrary.books:8080
-      - LOG_LEVEL=Error
+      - BookService__BaseUrl=http://elibrary.books:8083
+      - LOG_LEVEL=Information
     depends_on:
       - elibrary.users
 
   elibrary.books:
     build:
-      context: ./ELibrary.Books
+      context: .
+      dockerfile: ELibrary.Books/Dockerfile
     image: elibrary.books.publicapi
     ports:
-      - "8083:8080"
+      - "8083:8083"
+      - "9464:9464"
     networks:
       - elibrary_network
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ElasticSearch__Url=http://elasticsearch:9200
+      - ElasticClientSettings__ElasticUrl=http://elasticsearch:9200
+      - ElasticClientSettings__ElasticUser=elastic
+      - ElasticClientSettings__ElasticPassword=43nNvZsBHprD0IIJIKyY
+      - Serilog__Using=Serilog.Sinks.Elasticsearch
+      - Serilog__MinimumLevel__Default=Information
+      - Serilog__WriteTo__0__Name=Console
+      - Serilog__WriteTo__1__Name=Elasticsearch
+      - Serilog__WriteTo__1__Args__NodeUris=http://elasticsearch:9200
+      - Serilog__WriteTo__1__Args__AutoRegisterTemplate=true
+      - Serilog__WriteTo__1__Args__IndexFormat=elibrary-logging-{0:yyyy.MM.dd}
     depends_on:
       - elibrary.users
       - elasticsearch
   
-  elibrary.consumers:
+  elibrary.consumers.elasticservice:
     build:
-      context: ./ELibrary.Consumers/src
-    image: elibrary.consumers
+      context: .
+      dockerfile: ELibrary.Consumers/src/Dockerfile_ElasticService
+    image: elibrary.consumers.elasticservice
     ports:
       - "8084:80"
     networks:
       - elibrary_network
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      # Optionally, set RabbitMQ host here if needed:
-      # - RabbitMQ__Host=rabbitmq
+      - ElasticClientSettings__ElasticUrl=http://elasticsearch:9200
+      - ElasticClientSettings__ElasticUser=elastic
+      - ElasticClientSettings__ElasticPassword=43nNvZsBHprD0IIJIKyY
+      - BookService__BaseUrl=http://elibrary.books:8083
     depends_on:
       - rabbitmq
+
+  elibrary.consumers.book:
+    build:
+      context: .
+      dockerfile: ELibrary.Consumers/src/Dockerfile_Book
+    image: elibrary.consumers.book
+    ports:
+      - "8085:80"
+    networks:
+      - elibrary_network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - BookService__BaseUrl=http://elibrary.books:8083
+    depends_on:
+      - rabbitmq  
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2019-latest 
@@ -70,16 +99,18 @@ services:
     networks:
       - elibrary_network
     container_name: sqlserver-container
+    volumes:
+      - sqlserver_data:/var/opt/mssql
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
     environment:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
-      - xpack.security.enabled=false
+      - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=false
       - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=12345
+      - ELASTICSEARCH_PASSWORD=43nNvZsBHprD0IIJIKyY
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -87,6 +118,20 @@ services:
       - elibrary_network
     volumes:
       - es_data:/usr/share/elasticsearch/data
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.10.2
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=GEZ0ofbaV4InexT74Z_X
+      - XPACK_SECURITY_ENABLED=true
+    ports:
+      - "5601:5601"
+    networks:
+      - elibrary_network
+    depends_on:
+      - elasticsearch
 
   rabbitmq:
     image: rabbitmq:3.10-management
@@ -98,6 +143,55 @@ services:
       - "15672:15672"
     networks:
       - elibrary_network
+  
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    command: [ "--config=/etc/otel-collector-config.yaml" ]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "4317:4317"  # OTLP gRPC
+      - "4318:4318"  # OTLP HTTP
+      - "8889:8889"  # Prometheus metrics
+    networks:
+      - elibrary_network
+    depends_on:
+      - jaeger
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+       - "16686:16686"  # Jaeger UI
+       - "14250:14250"  # gRPC endpoint for traces
+       - "14268:14268"  # HTTP endpoint for spans
+    networks:
+      - elibrary_network
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - elibrary_network
+    depends_on:
+      - otel-collector
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - elibrary_network
+    depends_on:
+      - prometheus
 
 networks:
   elibrary_network:
@@ -105,3 +199,4 @@ networks:
 
 volumes:
   es_data:
+  sqlserver_data:

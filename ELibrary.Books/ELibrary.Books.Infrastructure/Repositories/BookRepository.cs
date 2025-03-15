@@ -95,5 +95,66 @@ namespace ELibrary.Books.Infrastructure.Repositories
 
             return books;
         }
+
+        public async Task<BookStock> UpdateBookStockAsync(int bookId, int quantity, StockUpdateType updateType, CancellationToken cancellationToken)
+        {
+            var bookStock = await _context.BookStocks
+                .FirstOrDefaultAsync(bs => bs.BookId == bookId, cancellationToken);
+            
+            if (bookStock == null)
+            {
+                // If no stock record exists, create a new one
+                bookStock = new BookStock
+                {
+                    BookId = bookId,
+                    Quantity = 0,
+                    LastUpdated = DateTime.UtcNow
+                };
+                
+                await _context.BookStocks.AddAsync(bookStock, cancellationToken);
+            }
+            
+            // Update the quantity based on the update type
+            switch (updateType)
+            {
+                case StockUpdateType.Set:
+                    bookStock.Quantity = quantity;
+                    break;
+                case StockUpdateType.Increment:
+                    bookStock.Quantity += quantity;
+                    break;
+                case StockUpdateType.Decrement:
+                    // Ensure we don't go below zero
+                    bookStock.Quantity = Math.Max(0, bookStock.Quantity - quantity);
+                    break;
+            }
+            
+            bookStock.LastUpdated = DateTime.UtcNow;
+            
+            await _context.SaveChangesAsync(cancellationToken);
+            return bookStock;
+        }
+
+        public async Task<BookStock> GetBookStockAsync(int bookId, CancellationToken cancellationToken)
+        {
+            var bookStock = await _context.BookStocks
+                .FirstOrDefaultAsync(bs => bs.BookId == bookId, cancellationToken);
+            
+            if (bookStock == null)
+            {
+                // If no stock record exists, create a default one with zero quantity
+                bookStock = new BookStock
+                {
+                    BookId = bookId,
+                    Quantity = 0,
+                    LastUpdated = DateTime.UtcNow
+                };
+                
+                await _context.BookStocks.AddAsync(bookStock, cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+            
+            return bookStock;
+        }
     }
 }

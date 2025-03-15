@@ -204,6 +204,9 @@ services:
       - elibrary_network
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - Jwt__Issuer=ELibrary
+      - Jwt__Audience=ELibraryUsers
+      - Jwt__SecretKey=MySuperLongSecretKey1234567890123456!
     depends_on:
       - elibrary.users
       - elibrary.books

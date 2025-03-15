@@ -28,7 +28,7 @@ namespace ELibrary.Orders.PublicApi
             builder.Host.UseSerilog((context, configuration) =>
                 configuration.ReadFrom.Configuration(context.Configuration));
 
-            builder.AddJwtAuthentication();
+            //builder.AddJwtAuthentication();
 
             builder.Services.AddScoped<IValidator<CreateOrderRequest>, CreateOrderRequestValidator>();
 

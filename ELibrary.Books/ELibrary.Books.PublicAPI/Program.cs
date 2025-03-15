@@ -93,6 +93,7 @@ namespace ELibrary.Books.PublicAPI
                 app.UseSwaggerUI();
             }
 
+            app.UseForwardedHeaders();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();

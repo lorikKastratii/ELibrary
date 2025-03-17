@@ -26,7 +26,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - UserService__BaseUrl=http://elibrary.gateway:8080
       - BookService__BaseUrl=http://elibrary.gateway:8080
-      - LOG_LEVEL=Information
+      - LOG_LEVEL=Debug
     depends_on:
       - elibrary.users
 

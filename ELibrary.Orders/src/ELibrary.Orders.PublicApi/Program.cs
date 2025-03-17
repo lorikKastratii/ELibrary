@@ -46,7 +46,7 @@ namespace ELibrary.Orders.PublicApi
             //});
 
             builder.Services.AddSingleton<RabbitMQClientService>();
-
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             var app = builder.Build();

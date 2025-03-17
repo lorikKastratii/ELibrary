@@ -13,16 +13,28 @@ namespace ELibrary.Orders.Infrastructure.Clients
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public UserClient(
-            ILogger<UserClient> logger, HttpClient httpClient)
+            ILogger<UserClient> logger, HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _httpClient = httpClient;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<User> GetUserByIdAsync(int id)
         {
             var url = $"{_httpClient.BaseAddress}api/user/getuserbyid/{id}";
-            var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
+
+            _logger.LogInformation($"url is: {url}");
+
+            var httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext == null)
+            {
+                _logger.LogError("HttpContext is null.");
+                return null;
+            }
+
+            var token = httpContext.Request.Headers.Authorization.ToString();
+            _logger.LogInformation($"token is: {token}");
 
             if (string.IsNullOrEmpty(token))
             {

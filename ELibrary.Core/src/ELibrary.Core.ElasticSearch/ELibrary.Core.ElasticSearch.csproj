@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<PackageId>ELibrary.Core.ElasticSearch</PackageId>
+		<Version>1.0.0</Version>
+		<Authors>Lorikk</Authors>
+		<Company>lorikk</Company>
+		<Description>Core logic for ELibrary microservices.</Description>
+		<RepositoryUrl>https://github.com/lorikKastratii/ELibrary</RepositoryUrl>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+</Project>

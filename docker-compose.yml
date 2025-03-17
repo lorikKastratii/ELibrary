@@ -24,9 +24,9 @@ services:
       - elibrary_network
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - UserService__BaseUrl=http://elibrary.users:8080
-      - BookService__BaseUrl=http://elibrary.books:8083
-      - LOG_LEVEL=Information
+      - UserService__BaseUrl=http://elibrary.gateway:8080
+      - BookService__BaseUrl=http://elibrary.gateway:8080
+      - LOG_LEVEL=Debug
     depends_on:
       - elibrary.users
 
@@ -70,7 +70,7 @@ services:
       - ElasticClientSettings__ElasticUrl=http://elasticsearch:9200
       - ElasticClientSettings__ElasticUser=elastic
       - ElasticClientSettings__ElasticPassword=43nNvZsBHprD0IIJIKyY
-      - BookService__BaseUrl=http://elibrary.books:8083
+      - BookService__BaseUrl=http://elibrary.gateway:8080
     depends_on:
       - rabbitmq
 
@@ -85,7 +85,7 @@ services:
       - elibrary_network
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - BookService__BaseUrl=http://elibrary.books:8083
+      - BookService__BaseUrl=http://elibrary.gateway:8080
     depends_on:
       - rabbitmq  
 
@@ -192,6 +192,25 @@ services:
       - elibrary_network
     depends_on:
       - prometheus
+
+  elibrary.gateway:
+    build:
+      context: .
+      dockerfile: ELibrary.Gateway/Dockerfile
+    image: elibrary.gateway
+    ports:
+      - "8080:8080"
+    networks:
+      - elibrary_network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Jwt__Issuer=ELibrary
+      - Jwt__Audience=ELibraryUsers
+      - Jwt__SecretKey=MySuperLongSecretKey1234567890123456!
+    depends_on:
+      - elibrary.users
+      - elibrary.books
+      - elibrary.orders
 
 networks:
   elibrary_network:

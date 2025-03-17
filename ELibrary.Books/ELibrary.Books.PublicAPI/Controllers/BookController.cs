@@ -3,6 +3,7 @@ using ELibrary.Books.Application.Dtos.Book;
 using ELibrary.Books.Application.Interfaces;
 using ELibrary.Books.Application.Requests.Book;
 using ELibrary.Books.Domain.Entity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nest;
 using System;
@@ -27,6 +28,7 @@ namespace ELibrary.Books.PublicAPI.Controllers
             _elasticClient = elasticClient;
         }
 
+        [AllowAnonymous]
         [HttpGet("GetBooks")]
         public async Task<IActionResult> GetBooksAsync(CancellationToken cancellationToken)
         {
@@ -148,6 +150,39 @@ namespace ELibrary.Books.PublicAPI.Controllers
                 return BadRequest();
             }
             return Ok("Connection successful.");
+        }
+
+        [HttpPut("UpdateStock/{id}")]
+        public async Task<IActionResult> UpdateBookStock(int id, [FromBody] UpdateStockRequest request, CancellationToken cancellationToken)
+        {
+            if (request is null)
+            {
+                _logger.LogWarning("UpdateStockRequest is null!");
+                return BadRequest();
+            }
+
+            var response = await _bookService.UpdateBookStockAsync(id, request.Quantity, request.UpdateType, cancellationToken);
+
+            if (response.IsSuccess is false)
+            {
+                _logger.LogWarning("Failed to update stock for book with ID: {id}", id);
+                return BadRequest(response.Error?.Message);
+            }
+
+            return Ok(response.Data);
+        }
+
+        [HttpGet("GetStock/{id}")]
+        public async Task<IActionResult> GetBookStock(int id, CancellationToken cancellationToken)
+        {
+            var response = await _bookService.GetBookStockAsync(id, cancellationToken);
+
+            if (response.IsSuccess)
+            {
+                return Ok(response.Data);
+            }
+
+            return NotFound("Book stock information not found");
         }
     }
 }

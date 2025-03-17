@@ -23,8 +23,8 @@ namespace ELibrary.Users.PublicAPI
             builder
                 .AddDomainModule()
                 .AddApplicationModule()
-                .AddInfrastructureModule()
-                .AddPublicApiModule();
+                .AddInfrastructureModule();
+                //.AddPublicApiModule();
 
             var app = builder.Build();
 
@@ -37,7 +37,8 @@ namespace ELibrary.Users.PublicAPI
 
             app.UseHttpsRedirection();
 
-            app.UseAuthentication();
+            app.UseForwardedHeaders();
+            //app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();

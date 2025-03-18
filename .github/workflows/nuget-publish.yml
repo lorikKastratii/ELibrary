@@ -42,5 +42,7 @@ jobs:
           dotnet pack ELibrary.Core/src/ELibrary.Core.ElasticSearch --output ./nupkg --configuration Release
 
       - name: Publish to GitHub Packages
+        env:
+            NUGET_AUTH_TOKEN: ${{ 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 }}
         run: |
           dotnet nuget push ./nupkg/*.nupkg --source https://nuget.pkg.github.com/${{ github.actor }}/index.json --api-key ${{ secrets.GITHUB_TOKEN }}

@@ -14,7 +14,7 @@ namespace ELibrary.Core.EF.Extensions
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+            //testt.
             return services;
         }
     }

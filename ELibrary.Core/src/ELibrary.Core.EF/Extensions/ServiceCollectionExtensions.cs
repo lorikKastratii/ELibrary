@@ -13,6 +13,8 @@ namespace ELibrary.Core.EF.Extensions
             services.AddDbContext<TContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
+
+            ///testing stuffff
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;

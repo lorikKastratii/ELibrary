@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<PackageId>ELibrary.Core.EF</PackageId>
+		<Version>1.0.0</Version>
+		<Authors>Lorikk</Authors>
+		<Company>lorikk</Company>
+		<Description>Core logic for ELibrary microservices.</Description>
+		<RepositoryUrl>https://github.com/lorikKastratii/ELibrary</RepositoryUrl>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.14" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.14">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.14" />
+	</ItemGroup>
+
+</Project>

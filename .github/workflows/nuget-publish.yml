@@ -3,7 +3,7 @@ name: Publish NuGet Packages
 on:
   push:
     paths:
-      - "core/**"
+      - "ELibrary.Core/**"
     branches:
       - develop
 
@@ -31,8 +31,8 @@ jobs:
 
       - name: Update NuGet Package Versions
         run: |
-          sed -i 's/<Version>.*<\/Version>/<Version>${{ steps.gitversion.outputs.SemVer }}<\/Version>/' core/src/ELibrary.Core.EF/ELibrary.Core.EF.csproj
-          sed -i 's/<Version>.*<\/Version>/<Version>${{ steps.gitversion.outputs.SemVer }}<\/Version>/' core/src/ELibrary.Core.ElasticSearch/ELibrary.Core.ElasticSearch.csproj
+          sed -i 's/<Version>.*<\/Version>/<Version>${{ steps.gitversion.outputs.SemVer }}<\/Version>/' ELibrary.Core/src/ELibrary.Core.EF/ELibrary.Core.EF.csproj
+          sed -i 's/<Version>.*<\/Version>/<Version>${{ steps.gitversion.outputs.SemVer }}<\/Version>/' ELibrary.Core/src/ELibrary.Core.ElasticSearch/ELibrary.Core.ElasticSearch.csproj
 
       - name: Pack NuGet Packages
         run: |
